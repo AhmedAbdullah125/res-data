@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { CategorySection } from '../../types/home'
+import type { CategoryItem, CategorySection } from '../../types/home'
+import { getCategory } from '../../services/landingPage'
 import Reveal from '../ui/Reveal'
 
 interface WhyChooseProps {
@@ -53,20 +55,58 @@ const CATEGORY_ICONS: ReactNode[] = [
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 22V4" /><path d="M5 4h12l-2 4 2 4H5" /></svg>,
 ]
 
+const cell = 'flex items-center gap-3 px-6 py-4 text-[15px] leading-snug'
+
 export default function WhyChoose({ section }: WhyChooseProps) {
-  const { header, items } = section
+  const { header, items: categories } = section
 
-  // Comparison values live on the first item that carries them; row labels are
-  // the `title` of each item. Row i pairs items[i].title with res/typical[i].
-  const values = items.find((it) => it.res_datas?.length)
-  const rows = items.map((item, i) => ({
-    id: item.id,
-    category: item.title,
-    res: values?.res_datas?.[i]?.description ?? '',
-    typical: values?.typical_providers?.[i]?.description ?? '',
-  }))
+  const [selectedId, setSelectedId] = useState<number | null>(
+    categories[0]?.id ?? null,
+  )
+  // Fetched category details, keyed by id. Seed with any category the home
+  // payload already delivered inline so we don't refetch it.
+  const [cache, setCache] = useState<Record<number, CategoryItem>>(() => {
+    const seed: Record<number, CategoryItem> = {}
+    for (const it of categories) if (it.res_datas?.length) seed[it.id] = it
+    return seed
+  })
+  const [loadingId, setLoadingId] = useState<number | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  const cell = 'flex items-center gap-3 px-6 py-4 text-[15px] leading-snug'
+  // Fetch the selected category's points on demand, once per id.
+  useEffect(() => {
+    if (selectedId == null || cache[selectedId]) return
+    const controller = new AbortController()
+    setLoadingId(selectedId)
+    setError(null)
+    getCategory(selectedId, controller.signal)
+      .then((detail) => {
+        setCache((prev) => ({ ...prev, [detail.id]: detail }))
+      })
+      .catch((err) => {
+        if (controller.signal.aborted) return
+        setError('Could not load this category. Please try again.')
+        console.error(err)
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoadingId(null)
+      })
+    return () => controller.abort()
+  }, [selectedId, cache])
+
+  const detail = selectedId != null ? cache[selectedId] : undefined
+  const isLoading = loadingId != null && loadingId === selectedId && !detail
+
+  const res = detail?.res_datas ?? []
+  const typical = detail?.typical_providers ?? []
+  // Body row count: enough to fit the category list and the point pairs; while
+  // loading we reserve a few skeleton rows so the layout doesn't collapse.
+  const pointRows = Math.max(res.length, typical.length, isLoading ? 6 : 0)
+  const bodyRows = Math.max(categories.length, pointRows, 1)
+  const rowIndexes = Array.from({ length: bodyRows }, (_, i) => i)
+
+  /** Shared subgrid props so all three columns keep their rows aligned. */
+  const columnSpan = { gridRow: '1 / -1' as const }
 
   return (
     <section className="relative overflow-hidden bg-[#f3f5f8] py-16 sm:py-24 lg:py-28">
@@ -81,81 +121,161 @@ export default function WhyChoose({ section }: WhyChooseProps) {
           )}
         </Reveal>
 
+        {error && (
+          <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-red-600">
+            {error}
+          </p>
+        )}
+
         {/* Desktop: three aligned columns via subgrid */}
-        <Reveal
-          className="mt-14 hidden grid-cols-[3fr_5fr_4fr] grid-rows-[repeat(11,auto)] gap-6 lg:grid"
-          direction="up"
-        >
-          {/* Category sidebar */}
-          <div className="row-span-[11] grid grid-rows-subgrid overflow-hidden rounded-lg bg-[#001e2c]">
-            <div className="flex items-center px-6 pb-4 pt-8 text-2xl font-medium uppercase tracking-wider text-white">
-              Category
-            </div>
-            {rows.map((row, i) => (
-              <div
-                key={row.id}
-                className={`${cell} ${i === 0 ? 'text-white' : 'text-[rgba(226,226,226,0.7)]'}`}
-              >
-                <span className="size-5 shrink-0 [&_svg]:size-full">
-                  {CATEGORY_ICONS[i] ?? CATEGORY_ICONS[0]}
-                </span>
-                {row.category}
+        <Reveal className="mt-14 hidden lg:block" direction="up">
+          <div
+            className="grid grid-cols-[3fr_5fr_4fr] gap-x-6"
+            style={{ gridTemplateRows: `auto repeat(${bodyRows}, auto)` }}
+          >
+            {/* Category sidebar */}
+            <div
+              className="grid grid-rows-subgrid overflow-hidden rounded-lg bg-[#001e2c]"
+              style={columnSpan}
+            >
+              <div className="flex items-center px-6 pb-4 pt-8 text-2xl font-medium uppercase tracking-wider text-white">
+                Category
               </div>
-            ))}
-          </div>
+              {rowIndexes.map((i) => {
+                const cat = categories[i]
+                if (!cat) return <div key={i} aria-hidden="true" />
+                const active = cat.id === selectedId
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setSelectedId(cat.id)}
+                    aria-pressed={active}
+                    className={`${cell} w-full cursor-pointer text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand ${
+                      active
+                        ? 'bg-white/10 text-white'
+                        : 'text-[rgba(226,226,226,0.7)] hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <span className="size-5 shrink-0 [&_svg]:size-full">
+                      {CATEGORY_ICONS[i] ?? CATEGORY_ICONS[0]}
+                    </span>
+                    {cat.title}
+                  </button>
+                )
+              })}
+            </div>
 
-          {/* Featured RES-DATA column */}
-          <div className="row-span-[11] grid grid-rows-subgrid overflow-hidden rounded-lg border-2 border-brand bg-white shadow-xl">
-            <div className="flex items-center px-6 pb-4 pt-8 text-3xl font-bold tracking-tight text-brand">
-              RES-DATA
-            </div>
-            {rows.map((row, i) => (
-              <div
-                key={row.id}
-                className={`${cell} text-[#1b1b1b] ${i === 0 ? 'bg-brand/20' : ''}`}
-              >
-                <CheckIcon />
-                {row.res}
+            {/* Featured RES-DATA column */}
+            <div
+              className="grid grid-rows-subgrid overflow-hidden rounded-lg border-2 border-brand bg-white shadow-xl"
+              style={columnSpan}
+            >
+              <div className="flex items-center px-6 pb-4 pt-8 text-3xl font-bold tracking-tight text-brand">
+                RES-DATA
               </div>
-            ))}
-          </div>
+              {rowIndexes.map((i) => {
+                const point = res[i]
+                return (
+                  <div key={i} className={`${cell} text-[#1b1b1b]`}>
+                    {point ? (
+                      <>
+                        <CheckIcon />
+                        {point.description}
+                      </>
+                    ) : isLoading ? (
+                      <span className="h-3.5 w-3/4 animate-pulse rounded bg-slate-200" />
+                    ) : null}
+                  </div>
+                )
+              })}
+            </div>
 
-          {/* Typical providers column */}
-          <div className="row-span-[11] grid grid-rows-subgrid overflow-hidden rounded-lg border border-slate-300 bg-white">
-            <div className="flex items-center bg-slate-100 px-6 pb-4 pt-8 text-2xl font-medium text-slate-800">
-              Typical Providers
-            </div>
-            {rows.map((row, i) => (
-              <div
-                key={row.id}
-                className={`${cell} border-t border-slate-100 text-[#3e484f] ${i === 0 ? 'bg-brand/20' : ''}`}
-              >
-                <CrossIcon />
-                {row.typical}
+            {/* Typical providers column */}
+            <div
+              className="grid grid-rows-subgrid overflow-hidden rounded-lg border border-slate-300 bg-white"
+              style={columnSpan}
+            >
+              <div className="flex items-center bg-slate-100 px-6 pb-4 pt-8 text-2xl font-medium text-slate-800">
+                Typical Providers
               </div>
-            ))}
+              {rowIndexes.map((i) => {
+                const point = typical[i]
+                return (
+                  <div
+                    key={i}
+                    className={`${cell} border-t border-slate-100 text-[#3e484f]`}
+                  >
+                    {point ? (
+                      <>
+                        <CrossIcon />
+                        {point.description}
+                      </>
+                    ) : isLoading ? (
+                      <span className="h-3.5 w-3/4 animate-pulse rounded bg-slate-200" />
+                    ) : null}
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </Reveal>
 
-        {/* Mobile: one card per category */}
-        <div className="mt-10 space-y-4 lg:hidden">
-          {rows.map((row, i) => (
-            <Reveal
-              key={row.id}
-              delay={Math.min(i, 4) * 60}
-              className="rounded-2xl border border-slate-200 bg-white p-5"
-            >
-              <p className="font-semibold text-navy">{row.category}</p>
-              <div className="mt-3 flex items-start gap-2">
-                <CheckIcon />
-                <span className="text-sm text-[#1b1b1b]">{row.res}</span>
-              </div>
-              <div className="mt-2 flex items-start gap-2">
-                <CrossIcon />
-                <span className="text-sm text-slate-500">{row.typical}</span>
-              </div>
-            </Reveal>
-          ))}
+        {/* Mobile: pick a category, then read its points */}
+        <div className="mt-10 lg:hidden">
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => {
+              const active = cat.id === selectedId
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setSelectedId(cat.id)}
+                  aria-pressed={active}
+                  className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                    active
+                      ? 'bg-brand text-white'
+                      : 'bg-white text-navy ring-1 ring-slate-200'
+                  }`}
+                >
+                  {cat.title}
+                </button>
+              )
+            })}
+          </div>
+
+          <div className="mt-5 space-y-3">
+            {isLoading &&
+              Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-24 animate-pulse rounded-2xl bg-slate-200/60"
+                />
+              ))}
+            {!isLoading &&
+              res.map((point, i) => (
+                <Reveal
+                  key={point.id}
+                  delay={Math.min(i, 4) * 60}
+                  className="rounded-2xl border border-slate-200 bg-white p-5"
+                >
+                  <div className="flex items-start gap-2">
+                    <CheckIcon />
+                    <span className="text-sm text-[#1b1b1b]">
+                      {point.description}
+                    </span>
+                  </div>
+                  {typical[i] && (
+                    <div className="mt-2 flex items-start gap-2">
+                      <CrossIcon />
+                      <span className="text-sm text-slate-500">
+                        {typical[i].description}
+                      </span>
+                    </div>
+                  )}
+                </Reveal>
+              ))}
+          </div>
         </div>
       </div>
     </section>

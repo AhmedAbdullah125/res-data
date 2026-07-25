@@ -133,6 +133,11 @@ export interface CategorySection {
   items: CategoryItem[]
 }
 
+/** `data` payload of GET /api/landing-page/category/{id} — one category's points. */
+export interface CategoryDetailData {
+  items: CategoryItem
+}
+
 export interface CoreValue {
   id: number
   image: string | null
