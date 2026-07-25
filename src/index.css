@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&display=swap');
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   RES-DATA brand theme (Tailwind v4 CSS-based config)
+   Use anywhere as utilities: bg-brand, text-brand, bg-navy, hover:bg-brand-dark
+--------------------------------------------------------------------------- */
+@theme {
+  --color-brand: #30a9df;
+  --color-brand-dark: #2491c2;
+  --color-brand-light: #5cbfe8;
+  --color-navy: #0e2245;
+  --color-navy-light: #16305c;
+
+  --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Step-transition entrance for the lead-form wizard. */
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-step {
+  animation: step-in 0.4s ease-out both;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: #0e2245;
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

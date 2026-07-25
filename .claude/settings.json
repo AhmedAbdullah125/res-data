@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pkill -f \"vite\")",
+      "WebSearch",
+      "WebFetch(domain:help.figma.com)",
+      "Bash(claude --version)",
+      "Bash(lsof -iTCP:3845 -sTCP:LISTEN -n -P)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 5 http://127.0.0.1:3845/mcp)",
+      "mcp__figma-dev-mode__get_screenshot",
+      "mcp__figma-dev-mode__get_design_context",
+      "Bash(npx oxlint *)"
+    ]
+  }
+}
