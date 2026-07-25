@@ -2,13 +2,12 @@ import axios from 'axios'
 
 /**
  * Central axios instance for the RES-DATA backend.
- * Base URL comes from VITE_API_BASE_URL (see .env.example).
- * Temporary fallback points at the backend's ngrok tunnel until the
- * production server is live.
+ * Base URL comes from VITE_API_BASE_URL (see .env.example), with a
+ * fallback to the deployed backend host.
  */
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ??
-  'https://9a1d-217-53-204-116.ngrok-free.app'
+  'https://dashboard.res-va.com'
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
