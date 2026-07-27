@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
-import logo from '/logo.png'
+import fallbackLogo from '/logo.png'
+import { useSettings } from '../../hooks/useSettings'
 
 interface NavItem {
   label: string
@@ -21,6 +22,10 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const settings = useSettings()
+
+  const siteName = settings?.site_name || 'RES-DATA'
+  const logo = settings?.site_logo || fallbackLogo
 
   /** Scroll to a home-page section, navigating home first if needed. */
   const scrollToSection = (section: string) => {
@@ -56,8 +61,8 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur">
       <nav className="mx-auto flex h-20 container items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link to="/" className="flex shrink-0 items-center" aria-label="RES-DATA home">
-          <img src={logo} alt="RES-DATA" className="h-10 w-auto" />
+        <Link to="/" className="flex shrink-0 items-center" aria-label={`${siteName} home`}>
+          <img src={logo} alt={siteName} className="h-10 w-auto" />
         </Link>
 
         {/* Desktop links */}
