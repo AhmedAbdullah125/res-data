@@ -4,6 +4,7 @@ import { getFormLanding } from '../../services/form'
 import type { FormIntroHeader } from '../../types/form'
 import { useLeadForm } from './useLeadForm'
 import WizardBody from './WizardBody'
+import RichText from '../ui/RichText'
 import VerticalStepper from './VerticalStepper'
 
 interface LeadFormModalProps {
@@ -11,8 +12,8 @@ interface LeadFormModalProps {
 }
 
 const FALLBACK_HEADER: FormIntroHeader = {
-  title: '30 minutes that change how you source deals.',
-  caption: '30 min · Video call',
+  title: '15 minutes that change how you source deals.',
+  caption: '15 min · Video call',
   description: 'No commitment, no pressure',
 }
 
@@ -72,7 +73,7 @@ export default function LeadFormModal({ onClose }: LeadFormModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Brand sidebar */}
-        <aside className="flex shrink-0 flex-col gap-8 bg-brand p-6 text-white md:w-64 md:p-8">
+        <aside className="flex shrink-0 flex-col gap-8 bg-brand p-6 text-white md:w-64 ">
           <h2 className="text-2xl font-bold leading-tight tracking-tight">
             {header.title}
           </h2>
@@ -90,7 +91,7 @@ export default function LeadFormModal({ onClose }: LeadFormModalProps) {
                 <rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" strokeWidth="1.3" />
                 <path d="m6 9 1.5 1.5L10.5 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              {header.description}
+              <RichText as="span" html={header.description} />
             </span>
           </div>
         </aside>

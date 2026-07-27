@@ -3,13 +3,14 @@ import axios from 'axios'
 import { getFormLanding } from '../services/form'
 import type { FormLandingData, FormIntroHeader } from '../types/form'
 import Reveal from '../components/ui/Reveal'
+import RichText from '../components/ui/RichText'
 import LeadWizard from '../components/form/LeadWizard'
 import LeadsLove from '../components/home/LeadsLove'
 import Testimonials from '../components/home/Testimonials'
 
 const FALLBACK_HEADER: FormIntroHeader = {
-  title: '30 minutes that change how you source deals.',
-  caption: '30 min · Video call',
+  title: '15 minutes that change how you source deals.',
+  caption: '15 min · Video call',
   description: 'No commitment, no pressure',
 }
 
@@ -62,7 +63,7 @@ export default function GetStarted() {
               </span>
               <span className="flex items-center gap-2">
                 <ShieldCheckIcon />
-                {header.description}
+                <RichText as="span" html={header.description} />
               </span>
             </div>
           </Reveal>

@@ -2,6 +2,8 @@ interface RichTextProps {
   /** HTML string from the backend. */
   html: string
   className?: string
+  /** Wrapper tag. Use "span" when the parent only accepts inline content. */
+  as?: 'div' | 'span' | 'p'
 }
 
 /**
@@ -9,9 +11,9 @@ interface RichTextProps {
  * as HTML. Paragraph margins are stripped so it flows like the plain text it
  * replaces; pass typography classes via `className`.
  */
-export default function RichText({ html, className = '' }: RichTextProps) {
+export default function RichText({ html, className = '', as: Tag = 'div' }: RichTextProps) {
   return (
-    <div
+    <Tag
       className={`[&_p]:m-0 ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />

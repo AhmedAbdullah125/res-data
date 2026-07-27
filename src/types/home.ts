@@ -21,14 +21,46 @@ export interface HomeHero {
   description: string
   button_text_one: string
   image: string
+  /** Uploaded video file URL (used when `video_type` is "file"). */
   video: string
+  /**
+   * Which source the dashboard picked. Optional: the front end derives the
+   * real kind from the URL, so this is only a hint about which field to read
+   * first. See docs/BACKEND_CHANGES.md.
+   */
+  video_type?: 'file' | 'youtube' | null
+  /** External video link, currently YouTube (used when `video_type` is "youtube"). */
+  video_url?: string | null
   statistics: Statistic[]
+}
+
+/** Overlay slot a motivated-seller label snaps to. */
+export type AnnotationPosition =
+  | 'top-left'
+  | 'middle-left'
+  | 'bottom-left'
+  | 'top-right'
+  | 'middle-right'
+  | 'bottom-right'
+
+/** One label drawn over the unannotated property image. */
+export interface MotivatedSellerAnnotation {
+  id: number
+  title: string
+  /** Null/absent → the front end assigns slots in list order. */
+  position?: AnnotationPosition | null
+  sort?: number | null
 }
 
 export interface MotivatedSellerBody {
   id: number
   description: string
+  /** Legacy image with the labels baked in; used when `image_free` is absent. */
   image: string | null
+  /** Clean property image (no text) that the labels are drawn over. */
+  image_free?: string | null
+  /** Label texts the front end positions and connects with arrows. */
+  annotations?: MotivatedSellerAnnotation[]
 }
 
 export interface MotivatedSellerSection {

@@ -2,7 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { HomeHero } from '../../types/home'
 import { useInView } from '../../hooks/useInView'
+import { resolveVideoSource } from '../../lib/video'
+import { MOCK_HERO_VIDEO_URL } from '../../mocks/home'
 import Reveal from '../ui/Reveal'
+import HeroVideo from './HeroVideo'
 
 interface HeroProps {
   hero: HomeHero
@@ -85,37 +88,48 @@ function ArrowIcon() {
   )
 }
 
-function PlayIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-9 fill-white" aria-hidden="true">
-      <path d="M8 5v14l11-7z" />
-    </svg>
-  )
-}
+/** Customer photos for the social-proof stack, each on its own tinted ring. */
+const AVATARS = [
+  { src: '/c1.png', tone: 'from-sky-300 to-sky-500' },
+  { src: '/c2.webp', tone: 'from-indigo-300 to-indigo-500' },
+  { src: '/c3.webp', tone: 'from-rose-300 to-rose-500' },
+  { src: '/c4.webp', tone: 'from-emerald-300 to-emerald-500' },
+] as const
 
 /** Small avatar-stack used inside the social-proof pill (design chrome). */
 function AvatarStack() {
-  const tones = ['from-sky-300 to-sky-500', 'from-indigo-300 to-indigo-500', 'from-rose-300 to-rose-500', 'from-emerald-300 to-emerald-500']
   return (
     <div className="flex items-center">
-      {tones.map((tone, i) => (
+      {AVATARS.map(({ src, tone }) => (
         <span
-          key={i}
-          className={`-ml-2 first:ml-0 size-8 rounded-full bg-gradient-to-br ${tone} ring-2 ring-white`}
-        />
+          key={src}
+          className={`-ml-2 size-8 rounded-full bg-gradient-to-br p-[2px] ring-2 ring-white first:ml-0 ${tone}`}
+        >
+          <img
+            src={src}
+            alt=""
+            loading="lazy"
+            className="size-full rounded-full bg-white object-cover"
+          />
+        </span>
       ))}
     </div>
   )
 }
 
 export default function Hero({ hero }: HeroProps) {
-  const [playing, setPlaying] = useState(false)
   const [statsRef, statsInView] = useInView<HTMLDivElement>()
   const firstStat = hero.statistics[0]
 
   // The API tacks a literal " ->" onto the CTA; we render a real arrow icon.
   const ctaLabel = hero.button_text_one.replace(/\s*-+>\s*$/, '').trim()
-  const hasVideo = Boolean(hero.video)
+
+  // Uploaded file or YouTube link — whichever the dashboard configured.
+  const videoSource = resolveVideoSource({
+    video: hero.video || MOCK_HERO_VIDEO_URL,
+    video_url: hero.video_url,
+    video_type: hero.video_type,
+  })
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-sky-50/60 to-white">
@@ -175,36 +189,7 @@ export default function Hero({ hero }: HeroProps) {
             delay={150}
             className="relative aspect-[586/503] w-full overflow-hidden rounded-[40px] bg-navy shadow-xl"
           >
-            {playing && hasVideo ? (
-              <video
-                src={hero.video}
-                className="size-full object-cover"
-                controls
-                autoPlay
-                playsInline
-              />
-            ) : (
-              <>
-                {hero.image && (
-                  <img
-                    src={hero.image}
-                    alt=""
-                    className="size-full object-cover"
-                  />
-                )}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                  <button
-                    type="button"
-                    onClick={() => hasVideo && setPlaying(true)}
-                    aria-label="Play video"
-                    disabled={!hasVideo}
-                    className="flex size-28 items-center justify-center rounded-full bg-brand pl-1 shadow-lg transition-transform hover:scale-105 disabled:cursor-default disabled:hover:scale-100"
-                  >
-                    <PlayIcon />
-                  </button>
-                </div>
-              </>
-            )}
+            <HeroVideo source={videoSource} poster={hero.image} title="RES-DATA intro video" />
           </Reveal>
         </div>
 

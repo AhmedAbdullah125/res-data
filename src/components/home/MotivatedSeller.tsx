@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import type { MotivatedSellerSection } from '../../types/home'
+import { MOCK_SELLER_ANNOTATIONS, MOCK_SELLER_IMAGE_FREE } from '../../mocks/home'
 import Reveal from '../ui/Reveal'
 import RichText from '../ui/RichText'
+import AnnotatedHouse from './AnnotatedHouse'
 
 interface MotivatedSellerProps {
   section: MotivatedSellerSection
@@ -29,6 +32,15 @@ function TwoToneHeading({ title }: { title: string }) {
 
 export default function MotivatedSeller({ section }: MotivatedSellerProps) {
   const { header_1, motivated_seller, header_2 } = section
+  const [freeImageBroken, setFreeImageBroken] = useState(false)
+
+  // Prefer the clean image + overlaid labels; fall back to the older image
+  // that has the labels baked in (also if the clean one fails to load).
+  const annotations = motivated_seller.annotations?.length
+    ? motivated_seller.annotations
+    : MOCK_SELLER_ANNOTATIONS
+  const freeImage = motivated_seller.image_free || MOCK_SELLER_IMAGE_FREE
+  const annotated = Boolean(freeImage) && annotations.length > 0 && !freeImageBroken
   const image = motivated_seller.image ?? FALLBACK_IMAGE
 
   return (
@@ -48,7 +60,7 @@ export default function MotivatedSeller({ section }: MotivatedSellerProps) {
         </Reveal>
 
         {/* Two-column body: paragraph + annotated house image */}
-        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+        <div className="grid items-center gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12">
           <Reveal
             direction="right"
             className="max-w-md text-lg font-medium leading-[1.75] text-[#4e4e4e] [&_p]:m-0 sm:text-xl lg:text-2xl"
@@ -56,11 +68,19 @@ export default function MotivatedSeller({ section }: MotivatedSellerProps) {
               <RichText html={motivated_seller.description} />
           </Reveal>
           <Reveal direction="left" delay={150} className="flex justify-center">
-            <img
-              src={image}
-              alt="Property attributes RES-DATA analyzes: property type, owner age, price range, year built, distress indicators, and equity"
-              className="h-auto w-full max-w-2xl"
-            />
+            {annotated ? (
+              <AnnotatedHouse
+                src={freeImage}
+                annotations={annotations}
+                onImageError={() => setFreeImageBroken(true)}
+              />
+            ) : (
+              <img
+                src={image}
+                alt="Property attributes RES-DATA analyzes: property type, owner age, price range, year built, distress indicators, and equity"
+                className="h-auto w-full max-w-2xl"
+              />
+            )}
           </Reveal>
         </div>
 
