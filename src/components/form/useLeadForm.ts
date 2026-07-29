@@ -116,7 +116,13 @@ export function useLeadForm(): LeadForm {
     setSubmitting(true)
     setError(null)
     try {
-      await submitStep1({ user: state.user, answers: toAnswers(state.step1) })
+      // `answers` is nullable server-side, so skip the key entirely when the
+      // dashboard has no active step-1 questions.
+      const answers = toAnswers(state.step1)
+      await submitStep1({
+        user: state.user,
+        ...(answers.length ? { answers } : {}),
+      })
       patch({ step: 2 })
     } catch (err) {
       setError(errorMessage(err))

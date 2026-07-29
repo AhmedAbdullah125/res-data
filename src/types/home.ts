@@ -13,6 +13,17 @@ export interface HomePopup {
   button_text_two: string
 }
 
+/** Social proof shown in the hero pill: client avatars + rating + label. */
+export interface HeroTrust {
+  id: number
+  /** e.g. "300+ Clients" — replaces the first statistic when present. */
+  title: string
+  /** Decimal string out of 5, e.g. "5.00". */
+  rate: string
+  /** Avatar URLs (four when configured; can arrive empty). */
+  images: string[]
+}
+
 export interface HomeHero {
   id: number
   title: string
@@ -31,6 +42,8 @@ export interface HomeHero {
   video_type?: 'file' | 'youtube' | null
   /** External video link, currently YouTube (used when `video_type` is "youtube"). */
   video_url?: string | null
+  /** Absent on older payloads — the front end falls back to bundled avatars. */
+  trust?: HeroTrust | null
   statistics: Statistic[]
 }
 
@@ -187,7 +200,12 @@ export interface Lead {
   title: string
   description: string
   image: string | null
+  /** Uploaded video file URL (used when `video_type` is "file"). */
   video: string | null
+  /** Hint about which field holds the source; the URL decides the player. */
+  video_type?: 'file' | 'youtube' | null
+  /** External video link, currently YouTube (used when `video_type` is "youtube"). */
+  video_url?: string | null
 }
 
 export interface LeadsSection {

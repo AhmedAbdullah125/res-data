@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { getFormLanding } from '../services/form'
 import type { FormLandingData, FormIntroHeader } from '../types/form'
+import { resolveVideoSource } from '../lib/video'
 import Reveal from '../components/ui/Reveal'
 import RichText from '../components/ui/RichText'
 import LeadWizard from '../components/form/LeadWizard'
+import HeroVideo from '../components/home/HeroVideo'
 import LeadsLove from '../components/home/LeadsLove'
 import Testimonials from '../components/home/Testimonials'
 
@@ -46,6 +48,11 @@ export default function GetStarted() {
   }, [])
 
   const header = data?.header1 ?? FALLBACK_HEADER
+  const hero = data?.hero
+  // Poster alone is enough to render the panel; the play button stays disabled
+  // until a file or YouTube link is configured.
+  const heroSource = hero ? resolveVideoSource(hero) : null
+  const hasHeroMedia = Boolean(hero?.image || heroSource)
 
   return (
     <>
@@ -69,16 +76,32 @@ export default function GetStarted() {
           </Reveal>
 
           <div className="mt-12 grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
-            {/* Lifestyle image (placeholder until the backend serves one) */}
+            {/* Hero media from the dashboard; placeholder art until it's set.
+                Real media shows on every breakpoint, the placeholder only on
+                desktop where it isn't pushing the wizard down. */}
             <Reveal
               direction="right"
-              className="hidden lg:block lg:sticky lg:top-28"
+              className={`lg:sticky lg:top-28 ${hasHeroMedia ? '' : 'hidden lg:block'}`}
             >
-              <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-sky-200 via-sky-100 to-brand/30">
-                <svg viewBox="0 0 64 64" className="size-24 text-brand/60" fill="none" aria-hidden="true">
-                  <rect x="6" y="16" width="36" height="28" rx="4" stroke="currentColor" strokeWidth="3" />
-                  <path d="M46 24l12-6v28l-12-6" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
-                </svg>
+              <div
+                className={`relative aspect-[4/3] w-full overflow-hidden rounded-3xl ${
+                  hasHeroMedia
+                    ? 'bg-navy'
+                    : 'flex items-center justify-center bg-gradient-to-br from-sky-200 via-sky-100 to-brand/30'
+                }`}
+              >
+                {hasHeroMedia ? (
+                  <HeroVideo
+                    source={heroSource}
+                    poster={hero?.image}
+                    title="RES-DATA intro video"
+                  />
+                ) : (
+                  <svg viewBox="0 0 64 64" className="size-24 text-brand/60" fill="none" aria-hidden="true">
+                    <rect x="6" y="16" width="36" height="28" rx="4" stroke="currentColor" strokeWidth="3" />
+                    <path d="M46 24l12-6v28l-12-6" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
+                  </svg>
+                )}
               </div>
             </Reveal>
 

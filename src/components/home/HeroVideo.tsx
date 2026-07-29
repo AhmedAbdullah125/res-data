@@ -7,11 +7,29 @@ interface HeroVideoProps {
   /** Uploaded poster image; falls back to the YouTube still when absent. */
   poster?: string | null
   title?: string
+  /** "hero" = full-bleed section player, "card" = compact carousel thumbnail. */
+  variant?: 'hero' | 'card'
 }
 
-function PlayIcon() {
+/** Per-variant chrome: button size, icon size, and how the still is dimmed. */
+const VARIANTS = {
+  hero: {
+    button: 'size-28',
+    icon: 'size-9',
+    still: 'size-full object-cover',
+    scrim: 'bg-black/30',
+  },
+  card: {
+    button: 'size-14',
+    icon: 'size-5',
+    still: 'size-full object-cover opacity-60',
+    scrim: '',
+  },
+} as const
+
+function PlayIcon({ className }: { className: string }) {
   return (
-    <svg viewBox="0 0 24 24" className="size-9 fill-white" aria-hidden="true">
+    <svg viewBox="0 0 24 24" className={`${className} fill-white`} aria-hidden="true">
       <path d="M8 5v14l11-7z" />
     </svg>
   )
@@ -23,9 +41,15 @@ function PlayIcon() {
  * only mounted after the click, so YouTube's scripts never load for visitors
  * who don't press play.
  */
-export default function HeroVideo({ source, poster, title = 'Video' }: HeroVideoProps) {
+export default function HeroVideo({
+  source,
+  poster,
+  title = 'Video',
+  variant = 'hero',
+}: HeroVideoProps) {
   const [playing, setPlaying] = useState(false)
 
+  const chrome = VARIANTS[variant]
   const still = poster || (source?.kind === 'youtube' ? source.posterUrl : null)
 
   if (playing && source?.kind === 'youtube') {
@@ -56,16 +80,18 @@ export default function HeroVideo({ source, poster, title = 'Video' }: HeroVideo
 
   return (
     <>
-      {still && <img src={still} alt="" className="size-full object-cover" />}
-      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+      {still && <img src={still} alt="" className={`absolute inset-0 ${chrome.still}`} />}
+      <div
+        className={`absolute inset-0 flex items-center justify-center ${chrome.scrim}`}
+      >
         <button
           type="button"
           onClick={() => source && setPlaying(true)}
           aria-label={`Play ${title.toLowerCase()}`}
           disabled={!source}
-          className="flex size-28 items-center justify-center rounded-full bg-brand pl-1 shadow-lg transition-transform hover:scale-105 disabled:cursor-default disabled:hover:scale-100"
+          className={`flex ${chrome.button} items-center justify-center rounded-full bg-brand pl-1 shadow-lg transition-transform hover:scale-105 disabled:cursor-default disabled:hover:scale-100`}
         >
-          <PlayIcon />
+          <PlayIcon className={chrome.icon} />
         </button>
       </div>
     </>

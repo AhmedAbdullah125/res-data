@@ -18,18 +18,22 @@ function CheckIcon() {
   )
 }
 
-/** Vertical stepper shown on the popup's brand sidebar. */
+/**
+ * Step indicator on the popup's brand panel. Vertical with every label on
+ * desktop; on mobile the panel sits above the form, so it collapses to a single
+ * row of markers where only the current step keeps its label.
+ */
 export default function VerticalStepper({ current }: VerticalStepperProps) {
   return (
-    <ol className="flex flex-col gap-5">
+    <ol className="flex items-center gap-3 md:flex-col md:items-start md:gap-5">
       {STEPS.map((step) => {
         const done = step.n < current
         const active = step.n === current
         return (
-          <li key={step.n} className="flex items-center gap-3">
+          <li key={step.n} className="flex min-w-0 items-center gap-2 md:gap-3">
             <span
               className={[
-                'flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold',
+                'flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold md:size-8',
                 done
                   ? 'bg-navy text-white'
                   : active
@@ -39,7 +43,12 @@ export default function VerticalStepper({ current }: VerticalStepperProps) {
             >
               {done ? <CheckIcon /> : step.n}
             </span>
-            <span className={active ? 'font-medium text-white' : 'text-white/70'}>
+            <span
+              className={[
+                'truncate text-sm md:text-base',
+                active ? 'font-medium text-white' : 'hidden text-white/70 md:inline',
+              ].join(' ')}
+            >
               {step.label}
             </span>
           </li>

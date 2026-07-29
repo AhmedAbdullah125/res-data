@@ -13,8 +13,18 @@ export interface FormIntroHeader {
   description: string
 }
 
+/** Media block beside the booking wizard (poster + uploaded file or YouTube). */
+export interface FormHeroMedia {
+  image: string | null
+  video: string | null
+  video_type?: 'file' | 'youtube' | null
+  video_url?: string | null
+}
+
 /** GET /api/landing-page/form — page chrome + social proof. */
 export interface FormLandingData {
+  /** Absent on older payloads — the page falls back to its placeholder art. */
+  hero?: FormHeroMedia | null
   header1: FormIntroHeader
   header2: SectionHeader
   leads: Lead[]
@@ -56,7 +66,11 @@ export interface FormUser {
 
 export interface Step1Payload {
   user: FormUser
-  answers: FormAnswer[]
+  /**
+   * Omitted entirely when the dashboard has no active step-1 questions — the
+   * backend treats the key as nullable, so sending `[]` is unnecessary.
+   */
+  answers?: FormAnswer[]
 }
 
 /** GET /api/landing-page/form-questions/step-2?date_time=YYYY-MM-DD */

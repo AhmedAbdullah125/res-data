@@ -67,18 +67,19 @@ export default function LeadFormModal({ onClose }: LeadFormModalProps) {
       onClick={requestClose}
     >
       <div
-        className={`flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl transition-all duration-300 ease-out md:flex-row ${
+        className={`flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl transition-all duration-300 ease-out md:flex-row ${
           visible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Brand sidebar */}
-        <aside className="flex shrink-0 flex-col gap-8 bg-brand p-6 text-white md:w-64 ">
-          <h2 className="text-2xl font-bold leading-tight tracking-tight">
+        {/* Brand sidebar — a compact banner above the form on mobile, where
+            every pixel it takes is one the form doesn't get. */}
+        <aside className="flex shrink-0 flex-col gap-3 bg-brand px-5 py-4 text-white md:w-64 md:gap-8 md:p-6">
+          <h2 className="line-clamp-2 text-base font-bold leading-snug tracking-tight md:line-clamp-none md:text-2xl md:leading-tight">
             {header.title}
           </h2>
           <VerticalStepper current={form.step} />
-          <div className="mt-auto flex flex-col gap-2 text-sm text-white/80">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-white/80 md:mt-auto md:flex-col md:gap-2 md:text-sm">
             <span className="flex items-center gap-2">
               <svg viewBox="0 0 16 16" className="size-4" fill="none" aria-hidden="true">
                 <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.4" />
@@ -97,7 +98,7 @@ export default function LeadFormModal({ onClose }: LeadFormModalProps) {
         </aside>
 
         {/* Step content */}
-        <div className="relative flex-1 overflow-y-auto p-6 md:p-8">
+        <div className="relative flex-1 overflow-y-auto p-5 md:p-8">
           <button
             type="button"
             onClick={requestClose}

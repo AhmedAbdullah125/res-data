@@ -1,6 +1,8 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import type { Lead, LeadsSection } from '../../types/home'
+import { resolveVideoSource } from '../../lib/video'
+import HeroVideo from './HeroVideo'
 import Reveal from '../ui/Reveal'
 import RichText from '../ui/RichText'
 
@@ -46,39 +48,22 @@ function QuoteIcon() {
   )
 }
 
+/**
+ * Card thumbnail that plays in place — an uploaded file or a YouTube link,
+ * whichever the dashboard configured for this lead.
+ */
 function VideoThumb({ lead }: { lead: Lead }) {
-  const content = (
-    <>
-      {lead.image && (
-        <img
-          src={lead.image}
-          alt=""
-          className="absolute inset-0 size-full object-cover opacity-60"
-        />
-      )}
-      <div className="relative flex size-14 items-center justify-center rounded-full bg-brand pl-1 shadow-lg">
-        <svg viewBox="0 0 24 24" className="size-5 fill-white" aria-hidden="true">
-          <path d="M8 5v14l11-7z" />
-        </svg>
-      </div>
-    </>
-  )
+  const source = resolveVideoSource(lead)
 
-  const className =
-    'relative flex h-[200px] w-full items-center justify-center overflow-hidden bg-[#131b2c]'
-
-  return lead.video ? (
-    <a
-      href={lead.video}
-      target="_blank"
-      rel="noreferrer"
-      aria-label="Play testimonial video"
-      className={className}
-    >
-      {content}
-    </a>
-  ) : (
-    <div className={className}>{content}</div>
+  return (
+    <div className="relative h-[200px] w-full overflow-hidden bg-[#131b2c]">
+      <HeroVideo
+        variant="card"
+        source={source}
+        poster={lead.image}
+        title="Testimonial video"
+      />
+    </div>
   )
 }
 

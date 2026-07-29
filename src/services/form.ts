@@ -10,22 +10,43 @@ import type {
 
 const VISITOR_KEY = 'res_data_visitor_id'
 
+/** `crypto.randomUUID` needs a secure context; fall back when it's missing. */
+function randomId(): string {
+  try {
+    if (typeof crypto?.randomUUID === 'function') return crypto.randomUUID()
+  } catch {
+    /* fall through to the manual generator */
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.floor(Math.random() * 16)
+    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16)
+  })
+}
+
 /** Stable per-visitor id, generated once and persisted in localStorage. */
 function getVisitorId(): string {
   try {
     let id = localStorage.getItem(VISITOR_KEY)
     if (!id) {
-      id = crypto.randomUUID()
+      id = randomId()
       localStorage.setItem(VISITOR_KEY, id)
     }
     return id
   } catch {
-    return crypto.randomUUID()
+    return randomId()
   }
 }
 
+/**
+ * The backend now mints its own visitor id when the header is absent, so a
+ * failure here degrades to a fresh server-side visitor instead of a dead request.
+ */
 function visitorHeaders(): Record<string, string> {
-  return { 'X-Visitor-Id': getVisitorId() }
+  try {
+    return { 'X-Visitor-Id': getVisitorId() }
+  } catch {
+    return {}
+  }
 }
 
 /** GET /api/landing-page/form — page chrome + social proof. */
