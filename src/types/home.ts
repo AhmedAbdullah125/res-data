@@ -68,9 +68,16 @@ export interface MotivatedSellerAnnotation {
 export interface MotivatedSellerBody {
   id: number
   description: string
-  /** Legacy image with the labels baked in; used when `image_free` is absent. */
+  /**
+   * The property image. The dashboard now uploads the clean artwork here (no
+   * text baked in), so it doubles as the overlay source; older payloads served
+   * a flattened graphic with the labels burned in.
+   */
   image: string | null
-  /** Clean property image (no text) that the labels are drawn over. */
+  /**
+   * Clean property image, when the backend serves it separately from `image`.
+   * Preferred over `image` for the overlay whenever it's present.
+   */
   image_free?: string | null
   /** Label texts the front end positions and connects with arrows. */
   annotations?: MotivatedSellerAnnotation[]

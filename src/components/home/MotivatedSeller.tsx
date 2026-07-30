@@ -34,14 +34,21 @@ export default function MotivatedSeller({ section }: MotivatedSellerProps) {
   const { header_1, motivated_seller, header_2 } = section
   const [freeImageBroken, setFreeImageBroken] = useState(false)
 
-  // Prefer the clean image + overlaid labels; fall back to the older image
-  // that has the labels baked in (also if the clean one fails to load).
+  // Prefer the clean image + overlaid labels. `image_free` wins when the
+  // backend splits the two; otherwise `image` is itself the label-free artwork.
+  // If it fails to load we drop to the bundled flattened graphic.
   const annotations = motivated_seller.annotations?.length
     ? motivated_seller.annotations
     : MOCK_SELLER_ANNOTATIONS
-  const freeImage = motivated_seller.image_free || MOCK_SELLER_IMAGE_FREE
+  const freeImage =
+    motivated_seller.image_free || motivated_seller.image || MOCK_SELLER_IMAGE_FREE
   const annotated = Boolean(freeImage) && annotations.length > 0 && !freeImageBroken
-  const image = motivated_seller.image ?? FALLBACK_IMAGE
+  // Retrying the URL that just failed would fail the same way, so when the
+  // overlay was drawing on `image` itself we go straight to the local graphic.
+  const image =
+    freeImageBroken && freeImage === motivated_seller.image
+      ? FALLBACK_IMAGE
+      : motivated_seller.image ?? FALLBACK_IMAGE
 
   return (
     <section id="services" className="relative scroll-mt-24 overflow-hidden py-16 sm:py-24 lg:py-28">
@@ -60,7 +67,7 @@ export default function MotivatedSeller({ section }: MotivatedSellerProps) {
         </Reveal>
 
         {/* Two-column body: paragraph + annotated house image */}
-        <div className="grid items-center gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12">
+        <div className="grid w-full items-center gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12">
           <Reveal
             direction="right"
             className="max-w-md text-lg font-medium leading-[1.75] text-[#4e4e4e] [&_p]:m-0 sm:text-xl lg:text-2xl"

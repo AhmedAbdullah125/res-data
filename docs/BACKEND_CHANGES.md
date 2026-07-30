@@ -245,6 +245,64 @@ by `sort` server-side.
 
 ---
 
+## 3. Still outstanding — checked against the live API on 2026-07-30
+
+### 3a. `image_free` never shipped (blocks section 2 entirely)
+
+`annotations` landed and is correct — six rows, positions and titles all present,
+identical in both locales. `image_free` is **absent from the payload**, so the
+front end falls back to the flattened `image`, which still has the labels and
+arrows burned into the pixels. Nothing animates and hover does nothing, because
+those arrows are part of the artwork, not elements on the page.
+
+```bash
+curl -s https://dashboard.res-va.com/api/landing-page/home \
+  | jq '.data.motivated_seller.motivated_seller | keys'
+# ["annotations","description","id","image"]   ← no image_free
+```
+
+The overlay itself is verified working: pointed at any real image it renders all
+six connectors, six labels (using the API's titles) and six anchor dots. The only
+missing input is a label-free export of the artwork. See the image requirements
+above — the current file is 775×351, so a re-export at the specified 1:1 framing
+is preferred; if it ships at the existing 775×351 crop instead, `SLOTS` in
+`AnnotatedHouse.tsx` needs re-tuning.
+
+### 3b. Two `position` values don't match the design (dashboard content fix)
+
+The API currently sends `Year built → bottom-left` and
+`Distress indicators → middle-right`. The design has those two swapped:
+`Year built → middle-right`, `Distress indicators → bottom-left`. The front end
+honours whatever the API says, so this is a content edit in the dashboard, not a
+code change.
+
+Also worth fixing while the labels move out of the artwork: the flattened image
+reads `Equity %a`. The API's title is the correct `Equity %`.
+
+### 3c. `/api/landing-page/form` drops `hero` under an English `Accept-Language`
+
+Unrelated to the section above, but same class of bug. The form endpoint returns
+a different payload depending on the locale — the English variant is missing the
+whole `hero` object. Browsers always send `Accept-Language`, so the site never
+receives it; API clients that send no header get the default locale and do.
+
+```bash
+curl -s https://dashboard.res-va.com/api/landing-page/form -H 'Accept-Language: en' | jq '.data | keys'
+# ["header1","header2","header3","leads","testimonials"]        ← no hero
+curl -s https://dashboard.res-va.com/api/landing-page/form                          | jq '.data | keys'
+# ["header1","header2","header3","hero","leads","testimonials"] ← hero present
+```
+
+Every other landing-page endpoint (`about-us`, `home`, `result-page`,
+`settings`) returns identical key sets in both locales — it is only `/form`, and
+only the `hero` key. Responses were served fresh from the origin
+(`x-proxy-cache: MISS`), so it isn't a stale edge cache.
+
+Until it's fixed, the get-started page shows its placeholder art instead of the
+hero video, even though the video file itself is fine.
+
+---
+
 ## Front-end files touched (for reference)
 
 | File | Purpose |
