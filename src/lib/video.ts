@@ -59,6 +59,25 @@ export function youtubeId(url: string): string | null {
   return validId(fromPath?.[1])
 }
 
+/**
+ * Embed URL for the ambient treatment (plays by itself, no chrome). YouTube
+ * only allows autoplay when muted, and `loop` is ignored unless `playlist`
+ * names the single video to repeat.
+ */
+export function ambientEmbedUrl(id: string): string {
+  const params = new URLSearchParams({
+    autoplay: '1',
+    mute: '1',
+    loop: '1',
+    playlist: id,
+    controls: '0',
+    rel: '0',
+    modestbranding: '1',
+    playsinline: '1',
+  })
+  return `https://www.youtube-nocookie.com/embed/${id}?${params}`
+}
+
 function youtubeSource(id: string): VideoSource {
   const params = new URLSearchParams({
     autoplay: '1',

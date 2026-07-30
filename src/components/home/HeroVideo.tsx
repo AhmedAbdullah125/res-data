@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import type { VideoSource } from '../../lib/video'
+import { ambientEmbedUrl, type VideoSource } from '../../lib/video'
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 
 interface HeroVideoProps {
   /** Resolved source, or null when nothing playable was configured. */
@@ -9,13 +10,19 @@ interface HeroVideoProps {
   title?: string
   /** "hero" = full-bleed section player, "card" = compact carousel thumbnail. */
   variant?: 'hero' | 'card'
+  /**
+   * Play on its own — muted, looping, no controls. Visitors who ask for
+   * reduced motion get the click-to-play poster instead.
+   */
+  ambient?: boolean
 }
 
 /** Per-variant chrome: button size, icon size, and how the still is dimmed. */
 const VARIANTS = {
   hero: {
-    button: 'size-28',
-    icon: 'size-9',
+    // The panel is only ~260px tall on a phone, so the button scales with it.
+    button: 'size-20 sm:size-28',
+    icon: 'size-7 sm:size-9',
     still: 'size-full object-cover',
     scrim: 'bg-black/30',
   },
@@ -46,11 +53,41 @@ export default function HeroVideo({
   poster,
   title = 'Video',
   variant = 'hero',
+  ambient = false,
 }: HeroVideoProps) {
   const [playing, setPlaying] = useState(false)
+  const reducedMotion = usePrefersReducedMotion()
 
   const chrome = VARIANTS[variant]
   const still = poster || (source?.kind === 'youtube' ? source.posterUrl : null)
+  const autoplay = ambient && !reducedMotion && !!source
+
+  if (autoplay && source?.kind === 'file') {
+    return (
+      <video
+        src={source.src}
+        poster={still ?? undefined}
+        aria-label={title}
+        className="absolute inset-0 size-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+      />
+    )
+  }
+
+  if (autoplay && source?.kind === 'youtube') {
+    return (
+      <iframe
+        src={ambientEmbedUrl(source.id)}
+        title={title}
+        className="pointer-events-none absolute inset-0 size-full"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        referrerPolicy="strict-origin-when-cross-origin"
+      />
+    )
+  }
 
   if (playing && source?.kind === 'youtube') {
     return (

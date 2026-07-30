@@ -49,8 +49,8 @@ export default function GetStarted() {
 
   const header = data?.header1 ?? FALLBACK_HEADER
   const hero = data?.hero
-  // Poster alone is enough to render the panel; the play button stays disabled
-  // until a file or YouTube link is configured.
+  // The video plays by itself (muted, looping). Poster alone is enough to
+  // render the panel; with no video at all it stays a still image.
   const heroSource = hero ? resolveVideoSource(hero) : null
   const hasHeroMedia = Boolean(hero?.image || heroSource)
 
@@ -92,6 +92,7 @@ export default function GetStarted() {
               >
                 {hasHeroMedia ? (
                   <HeroVideo
+                    ambient
                     source={heroSource}
                     poster={hero?.image}
                     title="RES-DATA intro video"
