@@ -47,8 +47,17 @@ export function useScrollProgress<T extends Element>({
     measure()
     window.addEventListener('scroll', schedule, { passive: true })
     window.addEventListener('resize', schedule)
+
+    // Sections above this one arrive from the API after mount and push it down
+    // the page. Without re-measuring, a reader who never scrolls again is stuck
+    // with whatever progress happened to be true at mount.
+    const resize = new ResizeObserver(schedule)
+    resize.observe(el)
+    resize.observe(document.body)
+
     return () => {
       if (frame) cancelAnimationFrame(frame)
+      resize.disconnect()
       window.removeEventListener('scroll', schedule)
       window.removeEventListener('resize', schedule)
     }
