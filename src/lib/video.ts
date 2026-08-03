@@ -59,10 +59,14 @@ export function youtubeId(url: string): string | null {
   return validId(fromPath?.[1])
 }
 
+/** Origin the ambient embed is served from — also the postMessage target. */
+export const YOUTUBE_EMBED_ORIGIN = 'https://www.youtube-nocookie.com'
+
 /**
  * Embed URL for the ambient treatment (plays by itself, no chrome). YouTube
  * only allows autoplay when muted, and `loop` is ignored unless `playlist`
- * names the single video to repeat.
+ * names the single video to repeat. `enablejsapi` lets our own mute button
+ * drive the player over postMessage.
  */
 export function ambientEmbedUrl(id: string): string {
   const params = new URLSearchParams({
@@ -74,8 +78,9 @@ export function ambientEmbedUrl(id: string): string {
     rel: '0',
     modestbranding: '1',
     playsinline: '1',
+    enablejsapi: '1',
   })
-  return `https://www.youtube-nocookie.com/embed/${id}?${params}`
+  return `${YOUTUBE_EMBED_ORIGIN}/embed/${id}?${params}`
 }
 
 function youtubeSource(id: string): VideoSource {

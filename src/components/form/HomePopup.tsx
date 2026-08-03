@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { prefetchQuestions } from '../../services/form'
 import LeadFormModal from './LeadFormModal'
 
-/** Warm the step-1 questions at 9s so the popup opens fully populated ~10s. */
-const PREFETCH_MS = 9_000
+/** Warm the step-1 questions at 44s so the popup opens fully populated ~45s. */
+const PREFETCH_MS = 44_000
 
 /**
  * Warms the step-1 questions in the background, then opens the booking popup.
