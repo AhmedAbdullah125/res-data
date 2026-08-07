@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { ReactNode } from 'react'
-import type { CategoryItem, CategorySection } from '../../types/home'
-import { getCategory } from '../../services/landingPage'
+import type { CategorySection } from '../../types/home'
 import Reveal from '../ui/Reveal'
 
 interface WhyChooseProps {
@@ -60,56 +59,36 @@ const cell = 'flex items-center gap-3 px-6 py-4 text-[15px] leading-snug'
 export default function WhyChoose({ section }: WhyChooseProps) {
   const { header, items: categories } = section
 
-  const [selectedId, setSelectedId] = useState<number | null>(
-    categories[0]?.id ?? null,
-  )
-  // Fetched category details, keyed by id. Seed with any category the home
-  // payload already delivered inline so we don't refetch it.
-  const [cache, setCache] = useState<Record<number, CategoryItem>>(() => {
-    const seed: Record<number, CategoryItem> = {}
-    for (const it of categories) if (it.res_datas?.length) seed[it.id] = it
-    return seed
+  // The comparison points all live on the first category that carries them —
+  // res_datas[i] / typical_providers[i] pair with categories[i]. That makes the
+  // whole table static, so /api/landing-page/category/{id} is never called.
+  const points = categories.find((c) => c.res_datas?.length) ?? categories[0]
+  const res = points?.res_datas ?? []
+  const typical = points?.typical_providers ?? []
+
+  const rowCount = Math.max(categories.length, res.length, typical.length)
+  const rowIndexes = Array.from({ length: rowCount }, (_, i) => i)
+
+  // Hovering previews a row; clicking pins it so it stays lit once the pointer
+  // leaves. Hover wins while the pointer is over the table.
+  const [hoveredRow, setHoveredRow] = useState<number | null>(null)
+  const [pinnedRow, setPinnedRow] = useState<number | null>(null)
+  const activeRow = hoveredRow ?? pinnedRow
+
+  /** Spread onto every cell of row `i` so the three columns light up together. */
+  const rowProps = (i: number) => ({
+    onMouseEnter: () => setHoveredRow(i),
+    onMouseLeave: () => setHoveredRow((prev) => (prev === i ? null : prev)),
+    onFocus: () => setHoveredRow(i),
+    onBlur: () => setHoveredRow((prev) => (prev === i ? null : prev)),
+    onClick: () => setPinnedRow((prev) => (prev === i ? null : i)),
   })
-  const [loadingId, setLoadingId] = useState<number | null>(null)
-  const [error, setError] = useState<string | null>(null)
-
-  // Fetch the selected category's points on demand, once per id.
-  useEffect(() => {
-    if (selectedId == null || cache[selectedId]) return
-    const controller = new AbortController()
-    setLoadingId(selectedId)
-    setError(null)
-    getCategory(selectedId, controller.signal)
-      .then((detail) => {
-        setCache((prev) => ({ ...prev, [detail.id]: detail }))
-      })
-      .catch((err) => {
-        if (controller.signal.aborted) return
-        setError('Could not load this category. Please try again.')
-        console.error(err)
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoadingId(null)
-      })
-    return () => controller.abort()
-  }, [selectedId, cache])
-
-  const detail = selectedId != null ? cache[selectedId] : undefined
-  const isLoading = loadingId != null && loadingId === selectedId && !detail
-
-  const res = detail?.res_datas ?? []
-  const typical = detail?.typical_providers ?? []
-  // Body row count: enough to fit the category list and the point pairs; while
-  // loading we reserve a few skeleton rows so the layout doesn't collapse.
-  const pointRows = Math.max(res.length, typical.length, isLoading ? 6 : 0)
-  const bodyRows = Math.max(categories.length, pointRows, 1)
-  const rowIndexes = Array.from({ length: bodyRows }, (_, i) => i)
 
   /** Shared subgrid props so all three columns keep their rows aligned. */
   const columnSpan = { gridRow: '1 / -1' as const }
 
   return (
-    <section className="relative overflow-hidden bg-[#f3f5f8] py-16 sm:py-24 lg:py-28">
+    <section id="why-choose" className="relative scroll-mt-24 overflow-hidden bg-[#f3f5f8] py-16 sm:py-24 lg:py-28">
       <div className="mx-auto container px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <Reveal className="mx-auto flex max-w-2xl flex-col items-center gap-3 text-center">
@@ -121,17 +100,11 @@ export default function WhyChoose({ section }: WhyChooseProps) {
           )}
         </Reveal>
 
-        {error && (
-          <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-red-600">
-            {error}
-          </p>
-        )}
-
         {/* Desktop: three aligned columns via subgrid */}
         <Reveal className="mt-14 hidden lg:block" direction="up">
           <div
             className="grid grid-cols-[3fr_5fr_4fr] gap-x-6"
-            style={{ gridTemplateRows: `auto repeat(${bodyRows}, auto)` }}
+            style={{ gridTemplateRows: `auto repeat(${rowCount}, auto)` }}
           >
             {/* Category sidebar */}
             <div
@@ -144,17 +117,17 @@ export default function WhyChoose({ section }: WhyChooseProps) {
               {rowIndexes.map((i) => {
                 const cat = categories[i]
                 if (!cat) return <div key={i} aria-hidden="true" />
-                const active = cat.id === selectedId
+                const active = activeRow === i
                 return (
                   <button
                     key={cat.id}
                     type="button"
-                    onClick={() => setSelectedId(cat.id)}
-                    aria-pressed={active}
-                    className={`${cell} w-full cursor-pointer text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand ${
+                    aria-pressed={pinnedRow === i}
+                    {...rowProps(i)}
+                    className={`${cell} w-full cursor-pointer border-l-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand ${
                       active
-                        ? 'bg-white/10 text-white'
-                        : 'text-[rgba(226,226,226,0.7)] hover:bg-white/5 hover:text-white'
+                        ? 'border-brand bg-white/10 text-white'
+                        : 'border-transparent text-[rgba(226,226,226,0.7)]'
                     }`}
                   >
                     <span className="size-5 shrink-0 [&_svg]:size-full">
@@ -176,16 +149,21 @@ export default function WhyChoose({ section }: WhyChooseProps) {
               </div>
               {rowIndexes.map((i) => {
                 const point = res[i]
+                const active = activeRow === i
                 return (
-                  <div key={i} className={`${cell} text-[#1b1b1b]`}>
-                    {point ? (
+                  <div
+                    key={i}
+                    {...rowProps(i)}
+                    className={`${cell} cursor-pointer border-t border-slate-100 transition-colors ${
+                      active ? 'bg-brand/10 text-navy' : 'text-[#1b1b1b]'
+                    }`}
+                  >
+                    {point && (
                       <>
                         <CheckIcon />
                         {point.description}
                       </>
-                    ) : isLoading ? (
-                      <span className="h-3.5 w-3/4 animate-pulse rounded bg-slate-200" />
-                    ) : null}
+                    )}
                   </div>
                 )
               })}
@@ -201,19 +179,21 @@ export default function WhyChoose({ section }: WhyChooseProps) {
               </div>
               {rowIndexes.map((i) => {
                 const point = typical[i]
+                const active = activeRow === i
                 return (
                   <div
                     key={i}
-                    className={`${cell} border-t border-slate-100 text-[#3e484f]`}
+                    {...rowProps(i)}
+                    className={`${cell} cursor-pointer border-t border-slate-100 transition-colors ${
+                      active ? 'bg-slate-100 text-[#1b1b1b]' : 'text-[#3e484f]'
+                    }`}
                   >
-                    {point ? (
+                    {point && (
                       <>
                         <CrossIcon />
                         {point.description}
                       </>
-                    ) : isLoading ? (
-                      <span className="h-3.5 w-3/4 animate-pulse rounded bg-slate-200" />
-                    ) : null}
+                    )}
                   </div>
                 )
               })}
@@ -221,50 +201,39 @@ export default function WhyChoose({ section }: WhyChooseProps) {
           </div>
         </Reveal>
 
-        {/* Mobile: pick a category, then read its points */}
-        <div className="mt-10 lg:hidden">
-          <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => {
-              const active = cat.id === selectedId
-              return (
+        {/* Mobile: one card per row, same highlight on tap */}
+        <div className="mt-10 space-y-3 lg:hidden">
+          {rowIndexes.map((i) => {
+            const cat = categories[i]
+            const active = activeRow === i
+            return (
+              <Reveal key={cat?.id ?? i} delay={Math.min(i, 4) * 60}>
                 <button
-                  key={cat.id}
                   type="button"
-                  onClick={() => setSelectedId(cat.id)}
-                  aria-pressed={active}
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  aria-pressed={pinnedRow === i}
+                  {...rowProps(i)}
+                  className={`w-full rounded-2xl border p-5 text-left transition-colors ${
                     active
-                      ? 'bg-brand text-white'
-                      : 'bg-white text-navy ring-1 ring-slate-200'
+                      ? 'border-brand bg-brand/5'
+                      : 'border-slate-200 bg-white'
                   }`}
                 >
-                  {cat.title}
-                </button>
-              )
-            })}
-          </div>
-
-          <div className="mt-5 space-y-3">
-            {isLoading &&
-              Array.from({ length: 5 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-24 animate-pulse rounded-2xl bg-slate-200/60"
-                />
-              ))}
-            {!isLoading &&
-              res.map((point, i) => (
-                <Reveal
-                  key={point.id}
-                  delay={Math.min(i, 4) * 60}
-                  className="rounded-2xl border border-slate-200 bg-white p-5"
-                >
-                  <div className="flex items-start gap-2">
-                    <CheckIcon />
-                    <span className="text-sm text-[#1b1b1b]">
-                      {point.description}
-                    </span>
-                  </div>
+                  {cat && (
+                    <div className="flex items-center gap-2 text-sm font-semibold text-navy">
+                      <span className="size-5 shrink-0 text-brand [&_svg]:size-full">
+                        {CATEGORY_ICONS[i] ?? CATEGORY_ICONS[0]}
+                      </span>
+                      {cat.title}
+                    </div>
+                  )}
+                  {res[i] && (
+                    <div className="mt-3 flex items-start gap-2">
+                      <CheckIcon />
+                      <span className="text-sm text-[#1b1b1b]">
+                        {res[i].description}
+                      </span>
+                    </div>
+                  )}
                   {typical[i] && (
                     <div className="mt-2 flex items-start gap-2">
                       <CrossIcon />
@@ -273,9 +242,10 @@ export default function WhyChoose({ section }: WhyChooseProps) {
                       </span>
                     </div>
                   )}
-                </Reveal>
-              ))}
-          </div>
+                </button>
+              </Reveal>
+            )
+          })}
         </div>
       </div>
     </section>

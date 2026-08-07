@@ -115,7 +115,7 @@ export default function RealMarkets({ section, layout = 'carousel' }: RealMarket
     setIndex((i) => Math.min(Math.max(i + delta, 0), count - 1))
 
   return (
-    <section className="relative overflow-hidden bg-[#f3f5f8] py-16 sm:py-24 lg:py-28">
+    <section id="real-markets" className="relative scroll-mt-24 overflow-hidden bg-[#f3f5f8] py-16 sm:py-24 lg:py-28">
       <div className="mx-auto container px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <Reveal className="flex max-w-3xl flex-col gap-3">

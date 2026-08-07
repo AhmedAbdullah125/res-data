@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import footerLogo from '/footerLogo.png'
+import { useScrollToSection } from '../../hooks/useScrollToSection'
 import { useSettings } from '../../hooks/useSettings'
 import type { SocialLink } from '../../types/settings'
 import SocialIcon from './SocialIcon'
@@ -20,28 +21,53 @@ function platformLabel(platform: string) {
   return platform.charAt(0).toUpperCase() + platform.slice(1)
 }
 
-const marketLinks = [
-  { label: 'Deduplicated', to: '/services' },
-  { label: 'Updated Daily', to: '/services' },
-  { label: 'For Your Market', to: '/services' },
-  { label: 'With Meticulous Support', to: '/services' },
+interface FooterLink {
+  label: string
+  to: string
+  /** When set, the link smooth-scrolls to this element id on the `to` page. */
+  section?: string
+}
+
+/** Each label points at the section on the home page that actually delivers it. */
+const marketLinks: FooterLink[] = [
+  { label: 'Updated Daily', to: '/', section: 'hottest-data' },
+  { label: 'For Your Market', to: '/', section: 'real-markets' },
+  { label: 'With Meticulous Support', to: '/', section: 'why-choose' },
 ]
 
-const companyLinks = [
+const companyLinks: FooterLink[] = [
   { label: 'About Us', to: '/about' },
-  { label: 'FAQ', to: '/faq' },
-  { label: 'Form', to: '/contact' },
-  { label: 'Services', to: '/services' },
+  { label: 'Our Team', to: '/about', section: 'team-members' },
+  { label: 'FAQ', to: '/', section: 'faqs' },
+  { label: 'Services', to: '/', section: 'services' },
 ]
 
 export default function Footer() {
   const settings = useSettings()
+  const scrollToSection = useScrollToSection()
 
   const siteName = settings?.site_name || 'RES-DATA'
   const logo = settings?.site_logo || footerLogo
   const description = settings?.site_description || FALLBACK_DESCRIPTION
   const footerText = settings?.footer_text || FALLBACK_FOOTER_TEXT
   const socials = settings?.social_media?.length ? settings.social_media : FALLBACK_SOCIALS
+
+  const linkClass = 'text-left text-sm text-slate-200 transition-colors hover:text-brand'
+
+  const renderLink = (link: FooterLink) =>
+    link.section ? (
+      <button
+        type="button"
+        onClick={() => scrollToSection(link.to, link.section!)}
+        className={`${linkClass} cursor-pointer`}
+      >
+        {link.label}
+      </button>
+    ) : (
+      <Link to={link.to} className={linkClass}>
+        {link.label}
+      </Link>
+    )
 
   return (
     <footer className="bg-navy text-white">
@@ -80,14 +106,7 @@ export default function Footer() {
             </h3>
             <ul className="mt-6 space-y-4">
               {marketLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    to={link.to}
-                    className="text-sm text-slate-200 transition-colors hover:text-brand"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
+                <li key={link.label}>{renderLink(link)}</li>
               ))}
             </ul>
           </div>
@@ -99,14 +118,7 @@ export default function Footer() {
             </h3>
             <ul className="mt-6 space-y-4">
               {companyLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    to={link.to}
-                    className="text-sm text-slate-200 transition-colors hover:text-brand"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
+                <li key={link.label}>{renderLink(link)}</li>
               ))}
             </ul>
           </div>

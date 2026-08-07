@@ -14,6 +14,7 @@ import LeadsLove from '../components/home/LeadsLove'
 import Faqs from '../components/home/Faqs'
 import BannerCta from '../components/home/BannerCta'
 import HomePopup from '../components/form/HomePopup'
+import PoliciesLegal from '../components/common/PoliciesLegal'
 
 export default function Home() {
   const { data, loading, error } = useHomePage()
@@ -33,16 +34,23 @@ export default function Home() {
         <>
           <Hero hero={data.hero} />
           <MotivatedSeller section={data.motivated_seller} />
-          <WinningPatterns section={data.warning_patterns} />
-          <HottestData section={data.hottes_data} />
-          <Testimonials section={data.testimonials} />
-          <MarketAnalysis section={data.market_analysis} />
-          <RealMarkets section={data.real_markets} />
-          <TeamMembers section={data.team_members} />
-          <WhyChoose section={data.category} />
-          <CoreValues section={data.over_values} />
-          <LeadsLove section={data.leads} />
-          <Faqs section={data.faqs} />
+          {!!data.warning_patterns?.patterns?.length && (
+            <WinningPatterns section={data.warning_patterns} />
+          )}
+          {!!data.hottes_data?.cards?.length && <HottestData section={data.hottes_data} />}
+          {!!data.testimonials?.testimonials?.length && (
+            <Testimonials section={data.testimonials} />
+          )}
+          {!!data.market_analysis?.items?.length && (
+            <MarketAnalysis section={data.market_analysis} />
+          )}
+          {!!data.real_markets?.markets?.length && <RealMarkets section={data.real_markets} />}
+          {!!data.team_members?.members?.length && <TeamMembers section={data.team_members} />}
+          {!!data.category?.items?.length && <WhyChoose section={data.category} />}
+          {!!data.over_values?.values?.length && <CoreValues section={data.over_values} />}
+          {!!data.leads?.leads?.length && <LeadsLove section={data.leads} />}
+          {!!data.faqs?.faqs?.length && <Faqs section={data.faqs} />}
+          <PoliciesLegal />
           <BannerCta banner={data.banner} />
           <HomePopup />
         </>

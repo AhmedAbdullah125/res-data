@@ -29,6 +29,7 @@ export default function Results() {
     return () => controller.abort()
   }, [])
 
+  console.log('Results data:', data?.leads)
   return (
     <>
       <Splash loading={loading} />
@@ -44,7 +45,10 @@ export default function Results() {
         <>
           <ProofStats hero={data.result_page} />
           <RealMarkets section={data.real_markets} layout="stacked" />
+          {
+            data.leads?.leads.length > 0 &&
           <LeadsLove section={data.leads} />
+          }
           <BannerCta banner={data.banner} />
         </>
       )}

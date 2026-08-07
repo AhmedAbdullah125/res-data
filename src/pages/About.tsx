@@ -8,6 +8,7 @@ import WhatWrong from '../components/about/WhatWrong'
 import WhyWeDo from '../components/about/WhyWeDo'
 import TeamMembers from '../components/home/TeamMembers'
 import BannerCta from '../components/home/BannerCta'
+import PoliciesLegal from '../components/common/PoliciesLegal'
 
 export default function About() {
   const [data, setData] = useState<AboutPageData | null>(null)
@@ -47,6 +48,7 @@ export default function About() {
           <WhatWrong section={data.what_wrong} />
           <WhyWeDo section={data.why_we_do} />
           <TeamMembers section={data.team_members} />
+          <PoliciesLegal />
           <BannerCta banner={data.banner} />
         </>
       )}

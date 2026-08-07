@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import fallbackLogo from '/logo.png'
 import { useSettings } from '../../hooks/useSettings'
+import { useScrollToSection } from '../../hooks/useScrollToSection'
 
 interface NavItem {
   label: string
@@ -20,32 +21,11 @@ const navLinks: NavItem[] = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
-  const navigate = useNavigate()
-  const { pathname } = useLocation()
   const settings = useSettings()
+  const scrollToSection = useScrollToSection()
 
   const siteName = settings?.site_name || 'RES-DATA'
   const logo = settings?.site_logo || fallbackLogo
-
-  /** Scroll to a home-page section, navigating home first if needed. */
-  const scrollToSection = (section: string) => {
-    if (pathname === '/') {
-      document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' })
-      return
-    }
-
-    navigate('/')
-    // Home fetches data behind a splash, so the section may not exist yet.
-    // Poll for it (up to ~3s) instead of guessing a fixed delay.
-    let tries = 0
-    const timer = setInterval(() => {
-      const el = document.getElementById(section)
-      if (el || tries++ > 60) {
-        el?.scrollIntoView({ behavior: 'smooth' })
-        clearInterval(timer)
-      }
-    }, 50)
-  }
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     [
@@ -55,7 +35,7 @@ export default function Navbar() {
         : 'text-navy/80 hover:text-brand',
     ].join(' ')
 
-  const sectionLinkClass = 'text-[15px] font-medium text-navy/80 transition-colors hover:text-brand'
+  const sectionLinkClass = 'text-[15px] font-medium text-navy/80 transition-colors hover:text-brand cursor-pointer'
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur">
@@ -72,7 +52,7 @@ export default function Navbar() {
               <li key={link.label}>
                 <button
                   type="button"
-                  onClick={() => scrollToSection(link.section!)}
+                  onClick={() => scrollToSection(link.to, link.section!)}
                   className={sectionLinkClass}
                 >
                   {link.label}
@@ -125,7 +105,7 @@ export default function Navbar() {
                     type="button"
                     onClick={() => {
                       setOpen(false)
-                      scrollToSection(link.section!)
+                      scrollToSection(link.to, link.section!)
                     }}
                     className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-navy/80 hover:bg-gray-50"
                   >

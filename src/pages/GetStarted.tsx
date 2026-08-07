@@ -36,7 +36,7 @@ function ShieldCheckIcon() {
 
 export default function GetStarted() {
   const [data, setData] = useState<FormLandingData | null>(null)
-
+console.log('GetStarted data:', data?.leads)
   useEffect(() => {
     const controller = new AbortController()
     getFormLanding(controller.signal)
@@ -117,10 +117,13 @@ export default function GetStarted() {
       {/* Social proof */}
       {data && (
         <>
+        {
+          data.leads?.length > 0 &&
           <LeadsLove
             variant="light"
             section={{ header: data.header2, leads: data.leads }}
           />
+        }
           <Testimonials
             section={{ header: data.header3, testimonials: data.testimonials }}
           />

@@ -48,7 +48,7 @@ export default function Faqs({ section }: FaqsProps) {
     )
 
   return (
-    <section className="relative overflow-hidden bg-[#f3f5f8] py-16 sm:py-24 lg:py-28">
+    <section id="faqs" className="relative scroll-mt-24 overflow-hidden bg-[#f3f5f8] py-16 sm:py-24 lg:py-28">
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-12 px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <Reveal>

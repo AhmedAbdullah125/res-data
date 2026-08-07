@@ -21,7 +21,16 @@ function ArrowIcon() {
   )
 }
 
+/** Dashboard convention: the literal text "no button" means "don't render it". */
+function showButton(text?: string | null) {
+  const label = text?.trim() ?? ''
+  return label !== '' && label.toLowerCase() !== 'no button'
+}
+
 export default function BannerCta({ banner }: BannerCtaProps) {
+  const showPrimary = showButton(banner.button_one_text)
+  const showSecondary = showButton(banner.button_tow_text)
+
   return (
     <section className="relative overflow-hidden py-16 sm:py-20 lg:py-24">
       <div className="mx-auto container px-4 sm:px-6 lg:px-8">
@@ -45,21 +54,27 @@ export default function BannerCta({ banner }: BannerCtaProps) {
               html={banner.description}
             />
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
-                to="/get-started"
-                className="inline-flex items-center justify-center gap-2 rounded-md bg-brand px-5 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-dark"
-              >
-                {banner.button_one_text}
-                <ArrowIcon />
-              </Link>
-              <a
-                href="mailto:hello@res-data.com"
-                className="inline-flex items-center justify-center rounded-md border-2 border-white/20 px-6 py-3 text-sm font-medium text-white transition-colors hover:border-white/40"
-              >
-                {banner.button_tow_text}
-              </a>
-            </div>
+            {(showPrimary || showSecondary) && (
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                {showPrimary && (
+                  <Link
+                    to="/get-started"
+                    className="inline-flex items-center justify-center gap-2 rounded-md bg-brand px-5 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-dark"
+                  >
+                    {banner.button_one_text}
+                    <ArrowIcon />
+                  </Link>
+                )}
+                {showSecondary && (
+                  <a
+                    href="mailto:hello@res-data.com"
+                    className="inline-flex items-center justify-center rounded-md border-2 border-white/20 px-6 py-3 text-sm font-medium text-white transition-colors hover:border-white/40"
+                  >
+                    {banner.button_tow_text}
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </Reveal>
       </div>

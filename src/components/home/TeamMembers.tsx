@@ -36,7 +36,7 @@ export default function TeamMembers({ section }: TeamMembersProps) {
   const { header, members } = section
 
   return (
-    <section className="relative overflow-hidden py-16 sm:py-24 lg:py-28">
+    <section id="team-members" className="relative scroll-mt-24 overflow-hidden py-16 sm:py-24 lg:py-28">
       <div className="mx-auto container flex flex-col gap-12 px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <Reveal className="flex max-w-3xl flex-col gap-3">
