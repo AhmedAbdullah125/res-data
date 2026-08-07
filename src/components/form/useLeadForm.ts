@@ -1,7 +1,9 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import { submitStep1, submitStep2, submitStep3 } from '../../services/form'
-import type { FormAnswer, FormUser } from '../../types/form'
-import type { AnswerValue } from './QuestionField'
+import { submitStep1, submitStep2, submitStep3 } from '@/services/form'
+import type { FormAnswer, FormUser } from '@/types/form'
+import type { AnswerValue } from '@/components/form/QuestionField'
 
 const STORAGE_KEY = 'res_data_lead_form'
 /** Set once a booking completes, so the home popup stops appearing. */

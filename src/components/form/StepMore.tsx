@@ -1,7 +1,9 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import { cachedQuestions, prefetchQuestions } from '../../services/form'
-import type { FormQuestion } from '../../types/form'
-import QuestionField, { type AnswerValue } from './QuestionField'
+import { cachedQuestions, prefetchQuestions } from '@/services/form'
+import type { FormQuestion } from '@/types/form'
+import QuestionField, { type AnswerValue } from '@/components/form/QuestionField'
 
 interface StepMoreProps {
   answers: Record<number, AnswerValue>

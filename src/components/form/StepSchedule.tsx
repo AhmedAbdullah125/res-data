@@ -1,12 +1,14 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import {
   cachedAvailability,
   prefetchAvailability,
   prefetchQuestions,
-} from '../../services/form'
-import type { Step2Availability } from '../../types/form'
-import Calendar, { formatDate } from './Calendar'
+} from '@/services/form'
+import type { Step2Availability } from '@/types/form'
+import Calendar, { formatDate } from '@/components/form/Calendar'
 
 interface StepScheduleProps {
   date: string | null

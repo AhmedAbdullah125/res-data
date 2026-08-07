@@ -1,5 +1,7 @@
+'use client'
+
 import type { ReactNode } from 'react'
-import { useInView } from '../../hooks/useInView'
+import { useInView } from '@/hooks/useInView'
 
 type Direction = 'up' | 'down' | 'left' | 'right' | 'none'
 

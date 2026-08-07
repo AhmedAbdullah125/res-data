@@ -1,10 +1,12 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 
 /** Tracks a CSS media query from JS, for layout that can't be expressed in CSS. */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(query).matches,
-  )
+  // Starts false so the server HTML and the first client render agree; the
+  // effect below corrects it before paint.
+  const [matches, setMatches] = useState(false)
 
   useEffect(() => {
     const mq = window.matchMedia(query)

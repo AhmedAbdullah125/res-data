@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
-import type { WarningPatternsSection } from '../../types/home'
-import Reveal from '../ui/Reveal'
+import type { WarningPatternsSection } from '@/types/home'
+import Reveal from '@/components/ui/Reveal'
+import SmartImage from '@/components/ui/SmartImage'
 
 interface WinningPatternsProps {
   section: WarningPatternsSection
@@ -100,11 +101,13 @@ export default function WinningPatterns({ section }: WinningPatternsProps) {
                 </Reveal>
 
                 {i < patterns.length - 1 && (
-                  <img
+                  <SmartImage
                     src={ARROW}
                     alt=""
+                    width={90}
+                    height={21}
                     aria-hidden="true"
-                    className="my-2 w-8 rotate-90 lg:mx-1 lg:my-0 lg:w-12 lg:rotate-0"
+                    className="my-2 h-auto w-8 rotate-90 lg:mx-1 lg:my-0 lg:w-12 lg:rotate-0"
                   />
                 )}
               </div>

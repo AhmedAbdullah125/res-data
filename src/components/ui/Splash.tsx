@@ -1,5 +1,8 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import logo from '../../assets/logo.png'
+import Image from 'next/image'
+import logo from '@/assets/logo.png'
 
 interface SplashProps {
   /** While true the splash covers the screen; when false it animates away. */
@@ -36,9 +39,10 @@ export default function Splash({ loading }: SplashProps) {
           : 'pointer-events-none translate-y-full opacity-0',
       ].join(' ')}
     >
-      <img
+      <Image
         src={logo}
         alt="RES-DATA"
+        priority
         className="h-16 w-auto animate-pulse select-none sm:h-20"
       />
     </div>

@@ -6,7 +6,7 @@
    docs/BACKEND_CHANGES.md go live. Delete this file once they do.
 --------------------------------------------------------------------------- */
 
-import type { MotivatedSellerAnnotation } from '../types/home'
+import type { MotivatedSellerAnnotation } from '@/types/home'
 
 /**
  * Preview a YouTube hero without waiting for the dashboard field: set this to

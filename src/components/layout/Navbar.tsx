@@ -1,39 +1,48 @@
+'use client'
+
 import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import fallbackLogo from '/logo.png'
-import { useSettings } from '../../hooks/useSettings'
-import { useScrollToSection } from '../../hooks/useScrollToSection'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import SmartImage from '@/components/ui/SmartImage'
+import { useSettings } from '@/hooks/useSettings'
+import { useScrollToSection } from '@/hooks/useScrollToSection'
+
+/** Bundled logo used until /api/landing-page/settings answers. */
+const FALLBACK_LOGO = '/logo.png'
 
 interface NavItem {
   label: string
-  to: string
+  href: string
   /** When set, the link smooth-scrolls to this element id on the home page. */
   section?: string
 }
 
 const navLinks: NavItem[] = [
-  { label: 'Home', to: '/' },
-  { label: 'Services', to: '/', section: 'services' },
-  { label: 'How It Works', to: '/', section: 'how-it-works' },
-  { label: 'Results', to: '/results' },
-  { label: 'Blog', to: '/blogs' },
-  { label: 'About Us', to: '/about' },
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/', section: 'services' },
+  { label: 'How It Works', href: '/', section: 'how-it-works' },
+  { label: 'Results', href: '/results' },
+  { label: 'Blog', href: '/blogs' },
+  { label: 'About Us', href: '/about' },
 ]
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
   const settings = useSettings()
   const scrollToSection = useScrollToSection()
 
   const siteName = settings?.site_name || 'RES-DATA'
-  const logo = settings?.site_logo || fallbackLogo
+  const logo = settings?.site_logo || FALLBACK_LOGO
 
-  const linkClass = ({ isActive }: { isActive: boolean }) =>
+  /** Home matches exactly; every other link also matches its sub-routes. */
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname.startsWith(href)
+
+  const linkClass = (href: string) =>
     [
       'text-[15px] font-medium transition-colors',
-      isActive
-        ? 'text-brand'
-        : 'text-navy/80 hover:text-brand',
+      isActive(href) ? 'text-brand' : 'text-navy/80 hover:text-brand',
     ].join(' ')
 
   const sectionLinkClass = 'text-[15px] font-medium text-navy/80 transition-colors hover:text-brand cursor-pointer'
@@ -42,8 +51,15 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur">
       <nav className="mx-auto flex h-20 container items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link to="/" className="flex shrink-0 items-center" aria-label={`${siteName} home`}>
-          <img src={logo} alt={siteName} className="h-10 w-auto" />
+        <Link href="/" className="flex shrink-0 items-center" aria-label={`${siteName} home`}>
+          <SmartImage
+            src={logo}
+            alt={siteName}
+            width={160}
+            height={40}
+            priority
+            className="h-10 w-auto"
+          />
         </Link>
 
         {/* Desktop links */}
@@ -53,7 +69,7 @@ export default function Navbar() {
               <li key={link.label}>
                 <button
                   type="button"
-                  onClick={() => scrollToSection(link.to, link.section!)}
+                  onClick={() => scrollToSection(link.href, link.section!)}
                   className={sectionLinkClass}
                 >
                   {link.label}
@@ -61,9 +77,9 @@ export default function Navbar() {
               </li>
             ) : (
               <li key={link.label}>
-                <NavLink to={link.to} end={link.to === '/'} className={linkClass}>
+                <Link href={link.href} className={linkClass(link.href)}>
                   {link.label}
-                </NavLink>
+                </Link>
               </li>
             ),
           )}
@@ -71,7 +87,7 @@ export default function Navbar() {
 
         {/* Desktop CTA */}
         <Link
-          to="/get-started"
+          href="/get-started"
           className="hidden rounded-lg bg-brand px-5 py-2.5 text-[15px] font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark md:inline-block"
         >
           I Hate Trash Leads
@@ -106,7 +122,7 @@ export default function Navbar() {
                     type="button"
                     onClick={() => {
                       setOpen(false)
-                      scrollToSection(link.to, link.section!)
+                      scrollToSection(link.href, link.section!)
                     }}
                     className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-navy/80 hover:bg-gray-50"
                   >
@@ -115,25 +131,24 @@ export default function Navbar() {
                 </li>
               ) : (
                 <li key={link.label}>
-                  <NavLink
-                    to={link.to}
-                    end={link.to === '/'}
+                  <Link
+                    href={link.href}
                     onClick={() => setOpen(false)}
-                    className={({ isActive }) =>
-                      [
-                        'block rounded-md px-3 py-2 text-base font-medium',
-                        isActive ? 'bg-brand/10 text-brand' : 'text-navy/80 hover:bg-gray-50',
-                      ].join(' ')
-                    }
+                    className={[
+                      'block rounded-md px-3 py-2 text-base font-medium',
+                      isActive(link.href)
+                        ? 'bg-brand/10 text-brand'
+                        : 'text-navy/80 hover:bg-gray-50',
+                    ].join(' ')}
                   >
                     {link.label}
-                  </NavLink>
+                  </Link>
                 </li>
               ),
             )}
             <li className="pt-2">
               <Link
-                to="/get-started"
+                href="/get-started"
                 onClick={() => setOpen(false)}
                 className="block rounded-lg bg-brand px-5 py-2.5 text-center text-base font-semibold text-white hover:bg-brand-dark"
               >

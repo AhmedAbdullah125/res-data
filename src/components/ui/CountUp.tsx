@@ -1,5 +1,7 @@
+'use client'
+
 import { useEffect, useMemo, useState } from 'react'
-import { useInView } from '../../hooks/useInView'
+import { useInView } from '@/hooks/useInView'
 
 interface CountUpProps {
   /** e.g. "300+", "$40M+", "US Wide" (non-numeric renders unchanged). */

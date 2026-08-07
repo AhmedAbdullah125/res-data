@@ -1,4 +1,6 @@
-import type { FormQuestion } from '../../types/form'
+'use client'
+
+import type { FormQuestion } from '@/types/form'
 
 /** Wizard-side answer value for a single question. */
 export interface AnswerValue {

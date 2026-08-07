@@ -1,4 +1,6 @@
-import type { StepNo } from './useLeadForm'
+'use client'
+
+import type { StepNo } from '@/components/form/useLeadForm'
 
 interface VerticalStepperProps {
   current: StepNo

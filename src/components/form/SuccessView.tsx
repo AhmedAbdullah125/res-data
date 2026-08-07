@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom'
+'use client'
+
+import Link from 'next/link'
 
 interface SuccessViewProps {
   message: string
@@ -28,7 +30,7 @@ export default function SuccessView({ message, onClose }: SuccessViewProps) {
         </button>
       ) : (
         <Link
-          to="/"
+          href="/"
           className="mt-2 inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-dark"
         >
           Back to home

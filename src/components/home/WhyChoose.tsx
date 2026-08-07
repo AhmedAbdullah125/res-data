@@ -1,7 +1,9 @@
+'use client'
+
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import type { CategorySection } from '../../types/home'
-import Reveal from '../ui/Reveal'
+import type { CategorySection } from '@/types/home'
+import Reveal from '@/components/ui/Reveal'
 
 interface WhyChooseProps {
   section: CategorySection

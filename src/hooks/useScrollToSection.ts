@@ -1,5 +1,7 @@
+'use client'
+
 import { useCallback, useEffect, useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { usePathname, useRouter } from 'next/navigation'
 
 /**
  * Returns `scrollToSection(path, id)` — smooth-scrolls to an element id,
@@ -8,8 +10,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
  * Shared by the navbar and the footer so both behave identically.
  */
 export function useScrollToSection() {
-  const navigate = useNavigate()
-  const { pathname } = useLocation()
+  const router = useRouter()
+  const pathname = usePathname()
   const timer = useRef<number | null>(null)
 
   const stopPolling = () => {
@@ -31,9 +33,9 @@ export function useScrollToSection() {
         return
       }
 
-      navigate(path)
-      // Pages fetch their content behind a splash, so the section may not exist
-      // yet. Poll for it (up to ~3s) instead of guessing a fixed delay.
+      router.push(path)
+      // The target page renders after navigation resolves, so the section may
+      // not exist yet. Poll for it (up to ~3s) instead of guessing a delay.
       let tries = 0
       timer.current = window.setInterval(() => {
         const el = document.getElementById(section)
@@ -43,6 +45,6 @@ export function useScrollToSection() {
         }
       }, 50)
     },
-    [navigate, pathname],
+    [router, pathname],
   )
 }

@@ -1,9 +1,11 @@
+'use client'
+
 import { useState } from 'react'
-import type { MotivatedSellerSection } from '../../types/home'
-import { MOCK_SELLER_ANNOTATIONS, MOCK_SELLER_IMAGE_FREE } from '../../mocks/home'
-import Reveal from '../ui/Reveal'
-import RichText from '../ui/RichText'
-import AnnotatedHouse from './AnnotatedHouse'
+import type { MotivatedSellerSection } from '@/types/home'
+import { MOCK_SELLER_ANNOTATIONS, MOCK_SELLER_IMAGE_FREE } from '@/mocks/home'
+import Reveal from '@/components/ui/Reveal'
+import RichText from '@/components/ui/RichText'
+import AnnotatedHouse from '@/components/home/AnnotatedHouse'
 
 interface MotivatedSellerProps {
   section: MotivatedSellerSection

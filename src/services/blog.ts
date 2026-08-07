@@ -1,6 +1,6 @@
-import api from '../lib/api'
-import type { ApiResponse } from '../types/api'
-import type { BlogDetailData, BlogsListData } from '../types/blog'
+import api from '@/lib/api'
+import type { ApiResponse } from '@/types/api'
+import type { BlogDetailData, BlogsListData } from '@/types/blog'
 
 /** GET /api/landing-page/blogs — every published post, newest first. */
 export async function getBlogs(signal?: AbortSignal): Promise<BlogsListData> {

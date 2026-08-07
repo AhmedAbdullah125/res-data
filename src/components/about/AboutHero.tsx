@@ -1,7 +1,8 @@
-import type { AboutUsBlock } from '../../types/about'
-import Reveal from '../ui/Reveal'
-import CountUp from '../ui/CountUp'
-import RichText from '../ui/RichText'
+import type { AboutUsBlock } from '@/types/about'
+import Reveal from '@/components/ui/Reveal'
+import SmartImage from '@/components/ui/SmartImage'
+import CountUp from '@/components/ui/CountUp'
+import RichText from '@/components/ui/RichText'
 
 interface AboutHeroProps {
   about: AboutUsBlock
@@ -44,11 +45,12 @@ export default function AboutHero({ about }: AboutHeroProps) {
               key={i}
               className={`absolute overflow-hidden rounded-2xl bg-slate-100 shadow-xl ring-1 ring-black/5 ${IMAGE_SLOTS[i]}`}
             >
-              <img
+              <SmartImage
                 src={src}
                 alt=""
-                loading="lazy"
-                className="size-full object-cover"
+                fill
+                sizes="25vw"
+                className="object-cover"
               />
             </div>
           ))}

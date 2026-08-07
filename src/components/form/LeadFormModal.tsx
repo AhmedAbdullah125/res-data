@@ -1,11 +1,13 @@
+'use client'
+
 import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
-import { getFormLanding } from '../../services/form'
-import type { FormIntroHeader } from '../../types/form'
-import { useLeadForm } from './useLeadForm'
-import WizardBody from './WizardBody'
-import RichText from '../ui/RichText'
-import VerticalStepper from './VerticalStepper'
+import { getFormLanding } from '@/services/form'
+import type { FormIntroHeader } from '@/types/form'
+import { useLeadForm } from '@/components/form/useLeadForm'
+import WizardBody from '@/components/form/WizardBody'
+import RichText from '@/components/ui/RichText'
+import VerticalStepper from '@/components/form/VerticalStepper'
 
 interface LeadFormModalProps {
   onClose: () => void

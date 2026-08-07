@@ -1,11 +1,14 @@
+'use client'
+
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import type { HomeHero } from '../../types/home'
-import { useInView } from '../../hooks/useInView'
-import { resolveVideoSource } from '../../lib/video'
-import { MOCK_HERO_VIDEO_URL } from '../../mocks/home'
-import Reveal from '../ui/Reveal'
-import HeroVideo from './HeroVideo'
+import Link from 'next/link'
+import type { HomeHero } from '@/types/home'
+import { useInView } from '@/hooks/useInView'
+import { resolveVideoSource } from '@/lib/video'
+import { MOCK_HERO_VIDEO_URL } from '@/mocks/home'
+import Reveal from '@/components/ui/Reveal'
+import HeroVideo from '@/components/home/HeroVideo'
+import SmartImage from '@/components/ui/SmartImage'
 
 interface HeroProps {
   hero: HomeHero
@@ -118,10 +121,11 @@ function AvatarStack({ images }: { images: string[] }) {
           key={`${src}-${i}`}
           className={`-ml-2 size-8 rounded-full bg-gradient-to-br p-[2px] ring-2 ring-white first:ml-0 ${AVATAR_TONES[i % AVATAR_TONES.length]}`}
         >
-          <img
+          <SmartImage
             src={src}
             alt=""
-            loading="lazy"
+            width={32}
+            height={32}
             className="size-full rounded-full bg-white object-cover"
           />
         </span>
@@ -191,7 +195,7 @@ export default function Hero({ hero }: HeroProps) {
 
             <div className="mt-8">
               <Link
-                to="/get-started"
+                href="/get-started"
                 className="inline-flex items-center gap-2 rounded-md bg-brand px-5 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-dark"
               >
                 {ctaLabel}

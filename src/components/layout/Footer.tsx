@@ -1,11 +1,14 @@
-import { Link } from 'react-router-dom'
-import footerLogo from '/footerLogo.png'
-import { useScrollToSection } from '../../hooks/useScrollToSection'
-import { useSettings } from '../../hooks/useSettings'
-import type { SocialLink } from '../../types/settings'
-import SocialIcon from './SocialIcon'
+'use client'
+
+import Link from 'next/link'
+import { useScrollToSection } from '@/hooks/useScrollToSection'
+import SmartImage from '@/components/ui/SmartImage'
+import { useSettings } from '@/hooks/useSettings'
+import type { SocialLink } from '@/types/settings'
+import SocialIcon from '@/components/layout/SocialIcon'
 
 /** Used until /api/landing-page/settings answers (and if it never does). */
+const FALLBACK_LOGO = '/footerLogo.png'
 const FALLBACK_DESCRIPTION =
   'The data intelligence partner for serious real estate investors. Accurate, verified, and actionable property and owner data, so you find opportunities before everyone else.'
 const FALLBACK_FOOTER_TEXT = '© 2026 Res-Data Intelligence, Inc. All rights reserved.'
@@ -48,7 +51,7 @@ export default function Footer() {
   const scrollToSection = useScrollToSection()
 
   const siteName = settings?.site_name || 'RES-DATA'
-  const logo = settings?.site_logo || footerLogo
+  const logo = settings?.site_logo || FALLBACK_LOGO
   const description = settings?.site_description || FALLBACK_DESCRIPTION
   const footerText = settings?.footer_text || FALLBACK_FOOTER_TEXT
   const socials = settings?.social_media?.length ? settings.social_media : FALLBACK_SOCIALS
@@ -65,7 +68,7 @@ export default function Footer() {
         {link.label}
       </button>
     ) : (
-      <Link to={link.to} className={linkClass}>
+      <Link href={link.to} className={linkClass}>
         {link.label}
       </Link>
     )
@@ -76,7 +79,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <img src={logo} alt={siteName} className="h-10 w-auto" />
+            <SmartImage
+              src={logo}
+              alt={siteName}
+              width={160}
+              height={40}
+              className="h-10 w-auto"
+            />
             <p className="mt-6 max-w-md text-sm leading-relaxed text-slate-300">
               {description}
             </p>
@@ -91,7 +100,13 @@ export default function Footer() {
                   className="flex h-10 w-10 items-center justify-center rounded-md border border-white/20 text-slate-300 transition-colors hover:border-brand hover:text-brand"
                 >
                   {social.image ? (
-                    <img src={social.image} alt="" className="size-4 object-contain" />
+                    <SmartImage
+                      src={social.image}
+                      alt=""
+                      width={16}
+                      height={16}
+                      className="size-4 object-contain"
+                    />
                   ) : (
                     <SocialIcon platform={social.platform} />
                   )}

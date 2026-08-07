@@ -1,6 +1,6 @@
-import privacyPolicyPdf from '../../assets/RES-VA-Privacy-Policy.pdf'
-import termsConditionsPdf from '../../assets/RES-VA-Terms-Conditions.pdf'
-import Reveal from '../ui/Reveal'
+'use client'
+
+import Reveal from '@/components/ui/Reveal'
 
 /** Download-to-tray glyph shown on both buttons. */
 function DownloadIcon() {
@@ -25,7 +25,7 @@ function DownloadIcon() {
 interface LegalDocument {
   label: string
   href: string
-  /** Explicit name so the saved file isn't Vite's hashed asset name. */
+  /** Saved filename for the download. */
   fileName: string
   primary: boolean
 }
@@ -33,13 +33,13 @@ interface LegalDocument {
 const documents: LegalDocument[] = [
   {
     label: 'Download Privacy Policy',
-    href: privacyPolicyPdf,
+    href: '/RES-VA-Privacy-Policy.pdf',
     fileName: 'RES-VA-Privacy-Policy.pdf',
     primary: true,
   },
   {
     label: 'Download Terms & Conditions',
-    href: termsConditionsPdf,
+    href: '/RES-VA-Terms-Conditions.pdf',
     fileName: 'RES-VA-Terms-Conditions.pdf',
     primary: false,
   },

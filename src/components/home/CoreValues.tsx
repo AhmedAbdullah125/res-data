@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
-import type { CoreValuesSection } from '../../types/home'
-import Reveal from '../ui/Reveal'
-import RichText from '../ui/RichText'
+import type { CoreValuesSection } from '@/types/home'
+import Reveal from '@/components/ui/Reveal'
+import RichText from '@/components/ui/RichText'
 
 interface CoreValuesProps {
   section: CoreValuesSection

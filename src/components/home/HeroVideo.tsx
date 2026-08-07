@@ -1,6 +1,9 @@
+'use client'
+
 import { useEffect, useRef, useState } from 'react'
-import { ambientEmbedUrl, YOUTUBE_EMBED_ORIGIN, type VideoSource } from '../../lib/video'
-import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
+import { ambientEmbedUrl, YOUTUBE_EMBED_ORIGIN, type VideoSource } from '@/lib/video'
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
+import SmartImage from '@/components/ui/SmartImage'
 
 interface HeroVideoProps {
   /** Resolved source, or null when nothing playable was configured. */
@@ -189,7 +192,15 @@ export default function HeroVideo({
 
   return (
     <>
-      {still && <img src={still} alt="" className={`absolute inset-0 ${chrome.still}`} />}
+      {still && (
+        <SmartImage
+          src={still}
+          alt=""
+          fill
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          className={chrome.still}
+        />
+      )}
       <div
         className={`absolute inset-0 flex items-center justify-center ${chrome.scrim}`}
       >

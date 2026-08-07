@@ -1,6 +1,8 @@
-import { useLeadForm } from './useLeadForm'
-import Stepper from './Stepper'
-import WizardBody from './WizardBody'
+'use client'
+
+import { useLeadForm } from '@/components/form/useLeadForm'
+import Stepper from '@/components/form/Stepper'
+import WizardBody from '@/components/form/WizardBody'
 
 /** Full-page lead form (used on /get-started): horizontal stepper + body. */
 export default function LeadWizard() {

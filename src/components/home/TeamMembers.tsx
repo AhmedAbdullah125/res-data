@@ -1,6 +1,7 @@
-import type { TeamMember, TeamMembersSection } from '../../types/home'
-import Reveal from '../ui/Reveal'
-import RichText from '../ui/RichText'
+import type { TeamMember, TeamMembersSection } from '@/types/home'
+import Reveal from '@/components/ui/Reveal'
+import SmartImage from '@/components/ui/SmartImage'
+import RichText from '@/components/ui/RichText'
 
 interface TeamMembersProps {
   section: TeamMembersSection
@@ -10,9 +11,11 @@ interface TeamMembersProps {
 function MemberImage({ member }: { member: TeamMember }) {
   if (member.image) {
     return (
-      <img
+      <SmartImage
         src={member.image}
         alt={member.name}
+        width={342}
+        height={244}
         className="aspect-[342/244] w-full rounded-2xl object-cover"
       />
     )

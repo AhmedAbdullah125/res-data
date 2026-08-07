@@ -1,10 +1,12 @@
+'use client'
+
 import { useRef } from 'react'
-import { Link } from 'react-router-dom'
-import type { Lead, LeadsSection } from '../../types/home'
-import { resolveVideoSource } from '../../lib/video'
-import HeroVideo from './HeroVideo'
-import Reveal from '../ui/Reveal'
-import RichText from '../ui/RichText'
+import Link from 'next/link'
+import type { Lead, LeadsSection } from '@/types/home'
+import { resolveVideoSource } from '@/lib/video'
+import HeroVideo from '@/components/home/HeroVideo'
+import Reveal from '@/components/ui/Reveal'
+import RichText from '@/components/ui/RichText'
 
 interface LeadsLoveProps {
   section: LeadsSection
@@ -148,7 +150,7 @@ export default function LeadsLove({ section, variant = 'brand' }: LeadsLoveProps
         {header.button_text && (
           <Reveal className="mt-10 flex justify-center">
             <Link
-              to="/get-started"
+              href="/get-started"
               className="inline-flex items-center gap-2 rounded-lg bg-navy px-5 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-navy-light"
             >
               {header.button_text}

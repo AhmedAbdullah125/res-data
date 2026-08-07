@@ -1,12 +1,12 @@
-import api from '../lib/api'
-import type { ApiResponse } from '../types/api'
+import api from '@/lib/api'
+import type { ApiResponse } from '@/types/api'
 import type {
   FormLandingData,
   FormQuestion,
   Step1Payload,
   Step2Availability,
   FormAnswer,
-} from '../types/form'
+} from '@/types/form'
 
 const VISITOR_KEY = 'res_data_visitor_id'
 

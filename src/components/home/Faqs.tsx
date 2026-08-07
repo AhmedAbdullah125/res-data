@@ -1,8 +1,10 @@
+'use client'
+
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import type { FaqsSection } from '../../types/home'
-import Reveal from '../ui/Reveal'
-import RichText from '../ui/RichText'
+import Link from 'next/link'
+import type { FaqsSection } from '@/types/home'
+import Reveal from '@/components/ui/Reveal'
+import RichText from '@/components/ui/RichText'
 
 interface FaqsProps {
   section: FaqsSection
@@ -103,7 +105,7 @@ export default function Faqs({ section }: FaqsProps) {
         {header.button_text && (
           <Reveal>
             <Link
-              to="/get-started"
+              href="/get-started"
               className="inline-flex items-center gap-2 rounded-md bg-brand px-5 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-dark"
             >
               {header.button_text}

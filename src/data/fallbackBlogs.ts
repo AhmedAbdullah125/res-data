@@ -1,4 +1,4 @@
-import type { BlogDetail } from '../types/blog'
+import type { BlogDetail } from '@/types/blog'
 
 /* ---------------------------------------------------------------------------
    Static posts shown when /api/landing-page/blogs is unreachable or returns an

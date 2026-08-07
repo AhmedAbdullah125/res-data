@@ -1,8 +1,10 @@
+'use client'
+
 import { useState } from 'react'
-import type { AnnotationPosition, MotivatedSellerAnnotation } from '../../types/home'
-import { useScrollProgress } from '../../hooks/useScrollProgress'
-import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
-import { useMediaQuery } from '../../hooks/useMediaQuery'
+import type { AnnotationPosition, MotivatedSellerAnnotation } from '@/types/home'
+import { useScrollProgress } from '@/hooks/useScrollProgress'
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 interface AnnotatedHouseProps {
   /** Unannotated property image — ideally a square transparent PNG. */

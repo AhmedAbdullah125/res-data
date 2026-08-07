@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom'
-import type { BlogListItem } from '../../types/blog'
-import { formatPublishedDate } from '../../lib/articleToc'
+import Link from 'next/link'
+import type { BlogListItem } from '@/types/blog'
+import { formatPublishedDate } from '@/lib/articleToc'
+import SmartImage from '@/components/ui/SmartImage'
 
 interface BlogCardProps {
   blog: BlogListItem
@@ -29,16 +30,20 @@ export default function BlogCard({ blog, featured = false }: BlogCardProps) {
       }`}
     >
       <Link
-        to={`/blogs/${blog.slug}`}
+        href={`/blogs/${blog.slug}`}
         tabIndex={-1}
         aria-hidden="true"
-        className={`block overflow-hidden ${featured ? 'h-full min-h-56' : 'h-48'}`}
+        className={`relative block overflow-hidden ${
+          featured ? 'h-full min-h-56' : 'h-48'
+        }`}
       >
         {blog.image ? (
-          <img
+          <SmartImage
             src={blog.image}
             alt=""
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <CoverFallback title={blog.title} />
@@ -62,7 +67,7 @@ export default function BlogCard({ blog, featured = false }: BlogCardProps) {
           }`}
         >
           <Link
-            to={`/blogs/${blog.slug}`}
+            href={`/blogs/${blog.slug}`}
             className="transition-colors hover:text-brand focus-visible:outline-none focus-visible:text-brand"
           >
             {blog.title}
@@ -78,7 +83,7 @@ export default function BlogCard({ blog, featured = false }: BlogCardProps) {
         </p>
 
         <Link
-          to={`/blogs/${blog.slug}`}
+          href={`/blogs/${blog.slug}`}
           className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-brand transition-colors hover:text-brand-dark"
         >
           Read article

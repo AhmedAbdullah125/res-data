@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import type { ResultPageHero } from '../../types/result'
-import Reveal from '../ui/Reveal'
-import CountUp from '../ui/CountUp'
-import RichText from '../ui/RichText'
+import Link from 'next/link'
+import type { ResultPageHero } from '@/types/result'
+import Reveal from '@/components/ui/Reveal'
+import CountUp from '@/components/ui/CountUp'
+import RichText from '@/components/ui/RichText'
 
 interface ProofStatsProps {
   hero: ResultPageHero
@@ -66,7 +66,7 @@ export default function ProofStats({ hero }: ProofStatsProps) {
 
           <div className="mt-8">
             <Link
-              to="/get-started"
+              href="/get-started"
               className="inline-flex items-center gap-2 rounded-md bg-navy px-5 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-navy-light"
             >
               {ctaLabel}

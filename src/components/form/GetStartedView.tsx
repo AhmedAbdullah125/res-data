@@ -1,14 +1,16 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { getFormLanding } from '../services/form'
-import type { FormLandingData, FormIntroHeader } from '../types/form'
-import { resolveVideoSource } from '../lib/video'
-import Reveal from '../components/ui/Reveal'
-import RichText from '../components/ui/RichText'
-import LeadWizard from '../components/form/LeadWizard'
-import HeroVideo from '../components/home/HeroVideo'
-import LeadsLove from '../components/home/LeadsLove'
-import Testimonials from '../components/home/Testimonials'
+import { getFormLanding } from '@/services/form'
+import type { FormLandingData, FormIntroHeader } from '@/types/form'
+import { resolveVideoSource } from '@/lib/video'
+import Reveal from '@/components/ui/Reveal'
+import RichText from '@/components/ui/RichText'
+import LeadWizard from '@/components/form/LeadWizard'
+import HeroVideo from '@/components/home/HeroVideo'
+import LeadsLove from '@/components/home/LeadsLove'
+import Testimonials from '@/components/home/Testimonials'
 
 const FALLBACK_HEADER: FormIntroHeader = {
   title: '15 minutes that change how you source deals.',
@@ -34,9 +36,8 @@ function ShieldCheckIcon() {
   )
 }
 
-export default function GetStarted() {
+export default function GetStartedView() {
   const [data, setData] = useState<FormLandingData | null>(null)
-console.log('GetStarted data:', data?.leads)
   useEffect(() => {
     const controller = new AbortController()
     getFormLanding(controller.signal)

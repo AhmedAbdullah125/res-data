@@ -1,8 +1,10 @@
-import type { LeadForm } from './useLeadForm'
-import StepDetails from './StepDetails'
-import StepSchedule from './StepSchedule'
-import StepMore from './StepMore'
-import SuccessView from './SuccessView'
+'use client'
+
+import type { LeadForm } from '@/components/form/useLeadForm'
+import StepDetails from '@/components/form/StepDetails'
+import StepSchedule from '@/components/form/StepSchedule'
+import StepMore from '@/components/form/StepMore'
+import SuccessView from '@/components/form/SuccessView'
 
 interface WizardBodyProps {
   form: LeadForm

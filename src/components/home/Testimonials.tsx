@@ -1,6 +1,7 @@
-import type { TestimonialsSection } from '../../types/home'
-import Reveal from '../ui/Reveal'
-import RichText from '../ui/RichText'
+import type { TestimonialsSection } from '@/types/home'
+import Reveal from '@/components/ui/Reveal'
+import SmartImage from '@/components/ui/SmartImage'
+import RichText from '@/components/ui/RichText'
 
 interface TestimonialsProps {
   section: TestimonialsSection
@@ -28,9 +29,11 @@ function StarRating({ rate }: { rate: number }) {
 function Avatar({ src, name }: { src: string | null; name: string }) {
   if (src) {
     return (
-      <img
+      <SmartImage
         src={src}
         alt={name}
+        width={40}
+        height={40}
         className="size-10 shrink-0 rounded-full bg-slate-100 object-cover"
       />
     )

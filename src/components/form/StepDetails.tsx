@@ -1,13 +1,15 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import {
   cachedQuestions,
   prefetchAvailability,
   prefetchQuestions,
-} from '../../services/form'
-import type { FormQuestion, FormUser } from '../../types/form'
-import QuestionField, { type AnswerValue } from './QuestionField'
-import { formatDate } from './Calendar'
+} from '@/services/form'
+import type { FormQuestion, FormUser } from '@/types/form'
+import QuestionField, { type AnswerValue } from '@/components/form/QuestionField'
+import { formatDate } from '@/components/form/Calendar'
 
 interface StepDetailsProps {
   user: FormUser
@@ -129,7 +131,7 @@ export default function StepDetails({
 
       <div className="flex items-center justify-between pt-2">
         <Link
-          to="/"
+          href="/"
           className="flex items-center gap-1 text-sm text-slate-400 transition-colors hover:text-slate-600"
         >
           <svg viewBox="0 0 16 16" className="size-4" fill="none" aria-hidden="true">

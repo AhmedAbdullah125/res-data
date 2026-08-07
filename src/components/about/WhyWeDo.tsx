@@ -1,6 +1,6 @@
-import type { WhyWeDoSection } from '../../types/about'
-import Reveal from '../ui/Reveal'
-import RichText from '../ui/RichText'
+import type { WhyWeDoSection } from '@/types/about'
+import Reveal from '@/components/ui/Reveal'
+import RichText from '@/components/ui/RichText'
 
 interface WhyWeDoProps {
   section: WhyWeDoSection

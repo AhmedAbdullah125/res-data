@@ -2,13 +2,13 @@
 
 The data intelligence partner for serious real estate investors — marketing site + app frontend.
 
-Built with **Vite + React 19 + TypeScript + Tailwind CSS v4**.
+Built with **Next.js 16 (App Router) + React 19 + TypeScript + Tailwind CSS v4**.
 
 ## Getting started
 
 ```bash
 npm install
-cp .env.example .env   # then set VITE_API_BASE_URL if needed
+cp .env.example .env   # then set NEXT_PUBLIC_API_BASE_URL if needed
 npm run dev            # start dev server
 npm run build          # type-check + production build
 npm run preview        # preview the production build
@@ -27,7 +27,7 @@ Brand tokens are defined in [`src/index.css`](src/index.css) via Tailwind v4's `
 ## API
 
 All backend calls go through the shared axios client in [`src/lib/api.ts`](src/lib/api.ts).
-Base URL is read from `VITE_API_BASE_URL` (defaults to `https://res-data.com/api/v1`).
+Base URL is read from `NEXT_PUBLIC_API_BASE_URL` (defaults to `https://res-data.com/api/v1`).
 
 ```ts
 import api from './lib/api'

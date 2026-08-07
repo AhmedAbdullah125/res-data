@@ -1,7 +1,9 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import type { RealMarket, RealMarketsSection } from '../../types/home'
-import Reveal from '../ui/Reveal'
+import Link from 'next/link'
+import type { RealMarket, RealMarketsSection } from '@/types/home'
+import Reveal from '@/components/ui/Reveal'
 
 interface RealMarketsProps {
   section: RealMarketsSection
@@ -185,7 +187,7 @@ export default function RealMarkets({ section, layout = 'carousel' }: RealMarket
         {header.button_text && (
           <Reveal className="mt-12 flex justify-center">
             <Link
-              to="/get-started"
+              href="/get-started"
               className="inline-flex items-center gap-2 rounded-md bg-brand px-5 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-dark"
             >
               {header.button_text}

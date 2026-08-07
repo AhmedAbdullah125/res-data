@@ -1,6 +1,8 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import { getSettings } from '../services/settings'
-import type { SiteSettings } from '../types/settings'
+import { getSettings } from '@/services/settings'
+import type { SiteSettings } from '@/types/settings'
 
 /**
  * Reads the shared site settings. Returns null until they arrive (and if the
