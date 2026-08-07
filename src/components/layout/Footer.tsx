@@ -38,6 +38,7 @@ const marketLinks: FooterLink[] = [
 const companyLinks: FooterLink[] = [
   { label: 'About Us', to: '/about' },
   { label: 'Our Team', to: '/about', section: 'team-members' },
+  { label: 'Blog', to: '/blogs' },
   { label: 'FAQ', to: '/', section: 'faqs' },
   { label: 'Services', to: '/', section: 'services' },
 ]

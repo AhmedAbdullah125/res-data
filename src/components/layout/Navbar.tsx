@@ -16,6 +16,7 @@ const navLinks: NavItem[] = [
   { label: 'Services', to: '/', section: 'services' },
   { label: 'How It Works', to: '/', section: 'how-it-works' },
   { label: 'Results', to: '/results' },
+  { label: 'Blog', to: '/blogs' },
   { label: 'About Us', to: '/about' },
 ]
 

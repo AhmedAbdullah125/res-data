@@ -4,6 +4,8 @@ import Home from './pages/Home'
 import GetStarted from './pages/GetStarted'
 import Results from './pages/Results'
 import About from './pages/About'
+import Blogs from './pages/Blogs'
+import BlogDetails from './pages/BlogDetails'
 import PagePlaceholder from './pages/PagePlaceholder'
 
 export default function App() {
@@ -21,6 +23,8 @@ export default function App() {
           element={<PagePlaceholder title="How It Works" subtitle="From raw records to actionable leads." />}
         />
         <Route path="results" element={<Results />} />
+        <Route path="blogs" element={<Blogs />} />
+        <Route path="blogs/:slug" element={<BlogDetails />} />
         <Route path="about" element={<About />} />
         <Route
           path="faq"
