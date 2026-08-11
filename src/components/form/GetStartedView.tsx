@@ -7,7 +7,8 @@ import type { FormLandingData, FormIntroHeader } from '@/types/form'
 import { resolveVideoSource } from '@/lib/video'
 import Reveal from '@/components/ui/Reveal'
 import RichText from '@/components/ui/RichText'
-import LeadWizard from '@/components/form/LeadWizard'
+// import LeadWizard from '@/components/form/LeadWizard' // replaced by the HubSpot embed — kept for rollback
+import HubSpotForm from '@/components/form/HubSpotForm'
 import HeroVideo from '@/components/home/HeroVideo'
 import LeadsLove from '@/components/home/LeadsLove'
 import Testimonials from '@/components/home/Testimonials'
@@ -107,9 +108,12 @@ export default function GetStartedView() {
               </div>
             </Reveal>
 
-            {/* Wizard */}
+            {/* Booking form — HubSpot embed (client-supplied, portal 24452375).
+                The in-house wizard below is kept, commented out, until the
+                HubSpot form is signed off. */}
             <Reveal direction="left" delay={100}>
-              <LeadWizard />
+              {/* <LeadWizard /> */}
+              <HubSpotForm className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8" />
             </Reveal>
           </div>
         </div>

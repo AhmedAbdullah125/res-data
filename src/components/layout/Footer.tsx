@@ -33,9 +33,9 @@ interface FooterLink {
 
 /** Each label points at the section on the home page that actually delivers it. */
 const marketLinks: FooterLink[] = [
-  { label: 'Updated Daily', to: '/', section: 'hottest-data' },
-  { label: 'For Your Market', to: '/', section: 'real-markets' },
-  { label: 'With Meticulous Support', to: '/', section: 'why-choose' },
+  { label: 'Why Choose RES-DATA?', to: '/', section: 'why-choose' },
+  { label: 'The Hottest Data For YOUR Market', to: '/', section: 'hottest-data' },
+  { label: 'Real Markets.', to: '/', section: 'real-markets' },
 ]
 
 const companyLinks: FooterLink[] = [
