@@ -33,14 +33,14 @@ interface LegalDocument {
 const documents: LegalDocument[] = [
   {
     label: ' Privacy Policy',
-    href: '/RES-VA-Privacy-Policy.pdf',
-    fileName: 'RES-VA-Privacy-Policy.pdf',
+    href: '/privacy-policy.pdf',
+    fileName: 'privacy-policy.pdf',
     primary: true,
   },
   {
     label: ' Terms & Conditions',
-    href: '/RES-VA-Terms-Conditions.pdf',
-    fileName: 'RES-VA-Terms-Conditions.pdf',
+    href: '/terms-conditions.pdf',
+    fileName: 'terms-conditions.pdf',
     primary: false,
   },
 ]
