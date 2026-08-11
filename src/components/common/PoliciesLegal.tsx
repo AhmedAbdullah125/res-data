@@ -33,14 +33,14 @@ interface LegalDocument {
 const documents: LegalDocument[] = [
   {
     label: ' Privacy Policy',
-    href: '/privacy-policy.pdf',
-    fileName: 'privacy-policy.pdf',
+    href: '/Privacy-Policy.pdf',
+    fileName: 'Privacy-Policy.pdf',
     primary: true,
   },
   {
     label: ' Terms & Conditions',
-    href: '/terms-conditions.pdf',
-    fileName: 'terms-conditions.pdf',
+    href: '/Terms-Conditions.pdf',
+    fileName: 'Terms-Conditions.pdf',
     primary: false,
   },
 ]
