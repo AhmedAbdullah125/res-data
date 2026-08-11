@@ -55,8 +55,8 @@ export default function Navbar() {
           <SmartImage
             src={logo}
             alt={siteName}
-            width={160}
-            height={40}
+            width={2000}
+            height={2000}
             priority
             className="h-10 w-auto"
           />

@@ -113,7 +113,10 @@ export default function GetStartedView() {
                 HubSpot form is signed off. */}
             <Reveal direction="left" delay={100}>
               {/* <LeadWizard /> */}
-              <HubSpotForm className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8" />
+              {/* Card copied from LeadWizard so the swap doesn't change the
+                  page's shape. Everything inside the frame is HubSpot's — see
+                  the styling note in HubSpotForm. */}
+              <HubSpotForm className="rounded-2xl bg-white/70 p-6 shadow-sm backdrop-blur-sm sm:p-8" />
             </Reveal>
           </div>
         </div>
