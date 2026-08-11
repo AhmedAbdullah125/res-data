@@ -3,24 +3,24 @@
 import Reveal from '@/components/ui/Reveal'
 
 /** Download-to-tray glyph shown on both buttons. */
-function DownloadIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="size-4 shrink-0"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M12 3v12" />
-      <path d="m7 10 5 5 5-5" />
-      <path d="M4 20h16" />
-    </svg>
-  )
-}
+// function DownloadIcon() {
+//   return (
+//     <svg
+//       viewBox="0 0 24 24"
+//       className="size-4 shrink-0"
+//       fill="none"
+//       stroke="currentColor"
+//       strokeWidth="1.8"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//       aria-hidden="true"
+//     >
+//       <path d="M12 3v12" />
+//       <path d="m7 10 5 5 5-5" />
+//       <path d="M4 20h16" />
+//     </svg>
+//   )
+// }
 
 interface LegalDocument {
   label: string
