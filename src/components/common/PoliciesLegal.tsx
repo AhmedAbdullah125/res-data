@@ -32,13 +32,13 @@ interface LegalDocument {
 
 const documents: LegalDocument[] = [
   {
-    label: 'Download Privacy Policy',
+    label: ' Privacy Policy',
     href: '/RES-VA-Privacy-Policy.pdf',
     fileName: 'RES-VA-Privacy-Policy.pdf',
     primary: true,
   },
   {
-    label: 'Download Terms & Conditions',
+    label: ' Terms & Conditions',
     href: '/RES-VA-Terms-Conditions.pdf',
     fileName: 'RES-VA-Terms-Conditions.pdf',
     primary: false,
@@ -98,7 +98,7 @@ export default function PoliciesLegal() {
                       : 'border-2 border-navy/15 text-navy hover:border-brand hover:text-brand'
                   }`}
                 >
-                  <DownloadIcon />
+                  {/* <DownloadIcon /> */}
                   {doc.label}
                 </a>
               ))}
