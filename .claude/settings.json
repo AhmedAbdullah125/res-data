@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -p \"require\\('/Users/raiyansoft/Documents/GitHub/res-data/node_modules/next/package.json'\\).version\")"
+    ]
+  }
+}

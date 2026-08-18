@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
+import Script from 'next/script'
 import { fetchSettings } from '@/services/settings'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -57,6 +58,18 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
         </div>
+
+        {/* HubSpot tracking code (portal 24452375 — same portal as the embedded
+            forms). HubSpot's install snippet says "just before </body> on every
+            page"; in the App Router the root layout is that every-page slot, and
+            next/script keeps it to a single load across client-side navigations
+            instead of re-executing per route. The `hs-script-loader` id is the
+            one HubSpot's own tooling looks for, so it has to stay. */}
+        <Script
+          id="hs-script-loader"
+          src="https://js.hs-scripts.com/24452375.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   )
